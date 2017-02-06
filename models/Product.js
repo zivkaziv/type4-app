@@ -8,11 +8,17 @@ var schemaOptions = {
 };
 
 var productSchema = new mongoose.Schema({
-  name: String,
-  barcodeId: { type: String, unique: true},
-  components : [String]
+    barcode_id: { type: String, unique: true},
+    amazon_id: { type: String, unique: true},
+    name: String,
+    category: String,
+    image_url: String,
+    scrape_result: String,
+    scraped_time: Date,
+    ingredients : [String]
 }, schemaOptions);
 
-var Product = mongoose.model('Products', productSchema);
+var Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
+
