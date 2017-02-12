@@ -11,13 +11,20 @@ exports.getProduct =  function(barcodeId){
             if(!product) {
                 ProductScraper.scrapeProduct(barcodeId)
                     .then(function (product) {
+                        product.number_of_searches = 1;
                         product.save();
                         resolve(product);
-                    }, function (err) {
-                        console.error(err);
-                        reject(err);
+                    }, function (unfoundProduct) {
+                        unfoundProduct.save();
+                        reject(unfoundProduct);
                     });
             }else{
+                if(product.number_of_searches){
+                    product.number_of_searches +=1;
+                }else{
+                    product.number_of_searches = 1;
+                }
+                product.save();
                 resolve(product);
             }
         });

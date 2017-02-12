@@ -5,6 +5,7 @@ const cheerioReq = require("cheerio-req");
 const cheerio = require('cheerio');
 const request = require('request');
 var Product = require('../../models/Product');
+var UnfoundProduct = require('../../models/Unfoundproduct');
 
 const BARCODE_FINDER_URL =  "http://www.upcitemdb.com/upc/";
 const AMAZON_PRODUCT_URL =  "http://www.amazon.com/dp/";
@@ -48,8 +49,10 @@ exports.scrapeProduct = function(barcodeId){
                     resolve(product);
                 });
             }else{
-                product.scrape_result = 'NOT_FOUND';
-                reject(product);
+                let unfoundProduct = new UnfoundProduct();
+                unfoundProduct.barcode_id = product.barcode_id;
+                unfoundProduct.scrape_result = 'NOT_FOUND';
+                reject(unfoundProduct);
             }
         });
     });
