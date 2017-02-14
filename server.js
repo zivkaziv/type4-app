@@ -62,6 +62,7 @@ app.use(function(req, res, next) {
 
 app.post('/signup', userController.signupPost);
 app.post('/login', userController.loginPost);
+app.post('/tokenlogin', userController.tokenLoginPost);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);

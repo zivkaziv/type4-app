@@ -31,7 +31,7 @@ exports.ensureAuthenticated = function(req, res, next) {
    * POST /login
    * Sign in with email and password
    */
-  exports.loginPost = function(req, res, next) {
+exports.loginPost = function(req, res, next) {
     req.assert('email', 'Email is not valid').isEmail();
     req.assert('email', 'Email cannot be blank').notEmpty();
     req.assert('password', 'Password cannot be blank').notEmpty();
@@ -57,6 +57,27 @@ exports.ensureAuthenticated = function(req, res, next) {
       });
     });
   };
+
+/**
+ * POST /tokenlogin
+ * Sign in with email and password
+ */
+exports.tokenLoginPost = function(req, res, next) {
+    var errors = req.validationErrors();
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    if(tokenParams){
+        var userId = tokenParams.sub;
+    }
+
+    User.findById(userId , function(err, user) {
+      if (!user) {
+          return res.status(401).send('Unable to find user according to token')
+      }else{
+          res.send({ token: generateToken(user), user: user.toJSON() });
+      }
+    });
+};
 
 /**
  * POST /signup
