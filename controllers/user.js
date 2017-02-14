@@ -53,6 +53,8 @@ exports.loginPost = function(req, res, next) {
         if (!isMatch) {
           return res.status(401).send({ msg: 'Invalid email or password' });
         }
+        user.loginDate = new Date();
+        user.save();
         res.send({ token: generateToken(user), user: user.toJSON() });
       });
     });
@@ -74,6 +76,8 @@ exports.tokenLoginPost = function(req, res, next) {
       if (!user) {
           return res.status(401).send('Unable to find user according to token')
       }else{
+          user.loginDate = new Date();
+          user.save();
           res.send({ token: generateToken(user), user: user.toJSON() });
       }
     });

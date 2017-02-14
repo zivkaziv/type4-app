@@ -24,7 +24,8 @@ var userSchema = new mongoose.Schema({
   google: String,
   github: String,
   vk: String,
-  sensentivities: [String]
+  allergies: [{}],
+  loginDate: Date
 }, schemaOptions);
 
 userSchema.pre('save', function(next) {
