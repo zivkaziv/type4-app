@@ -1,5 +1,7 @@
 var ProductProvider = require('../business/logic/productprovider');
 var jwt = require('jsonwebtoken');
+var User = require('../models/User');
+
 /**
  * GET product/:pId
  */
@@ -14,12 +16,51 @@ exports.productGet = function(req, res) {
     ProductProvider.getProduct(req.params.pId)
         .then(function(product){
             if(userId){
-                console.log(userId);
+                console.log('the user id is ' + userId);
+                User.findById(userId , function(err, user) {
+                    if(user){
+                        markProblematicIngredients(user,product);
+                    }
+                    res.send(product);
+                });
                 //mark problematic ingredients
+            }else{
+                res.send(product);
             }
-            res.send(product);
         },function(err){
             console.error(err);
             res.send(err);
         });
 };
+
+function markProblematicIngredients(user,product){
+    if(user && product){
+        product.ingredient_analysis = [];
+        if(user.allergies.length == 0){
+            for(let ingredientIndex = 0; ingredientIndex <  product.ingredients.length; ingredientIndex++){
+                product.ingredient_analysis.push({
+                    name: product.ingredients[ingredientIndex],
+                    analysis: 'UNKNOWN'
+                });
+            }
+        }else {
+            for (let allergyIndex = 0; allergyIndex < user.allergies.length; allergyIndex++) {
+                for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
+                    if (user.allergies[allergyIndex].originalObject.compound.toLowerCase().indexOf(product.ingredients[ingredientIndex].toLowerCase()) > -1) {
+                        product.ingredient_analysis.push({
+                            name: product.ingredients[ingredientIndex],
+                            analysis: 'SENSITIVE'
+                        })
+                    } else {
+                        product.ingredient_analysis.push({
+                            name: product.ingredients[ingredientIndex],
+                            analysis: 'NOT_SENSITIVE'
+                        })
+                    }
+                }
+            }
+        }
+
+        product._doc.ingredient_analysis = product.ingredient_analysis;
+    }
+}

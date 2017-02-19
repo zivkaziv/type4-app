@@ -145,6 +145,7 @@ exports.accountPut = function(req, res, next) {
       user.location = req.body.location;
       user.website = req.body.website;
       user.allergies = req.body.allergies;
+      user.searches = req.body.searches;
     }
     user.save(function(err) {
       if ('password' in req.body) {
