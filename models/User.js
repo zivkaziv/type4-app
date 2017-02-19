@@ -25,6 +25,7 @@ var userSchema = new mongoose.Schema({
   github: String,
   vk: String,
   allergies: [{}],
+  searches: [{}],
   loginDate: Date
 }, schemaOptions);
 

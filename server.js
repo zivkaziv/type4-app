@@ -22,6 +22,7 @@ var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var productController = require('./controllers/product');
 var componentController = require('./controllers/component');
+var allergiesController = require('./controllers/allergies');
 
 var app = express();
 
@@ -69,6 +70,9 @@ app.post('/reset/:token', userController.resetPost);
 app.get('/product/:pId',productController.productGet);
 app.get('/component',componentController.componentGet);
 app.post('/component',componentController.componentPost);
+
+app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
+app.get('/allergies',allergiesController.getAllAllergiesGet);
 
 //TBD
 app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
