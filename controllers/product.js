@@ -44,19 +44,23 @@ function markProblematicIngredients(user,product){
                 });
             }
         }else {
-            for (let allergyIndex = 0; allergyIndex < user.allergies.length; allergyIndex++) {
-                for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
+            for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
+                let isSensetive = false;
+                for (let allergyIndex = 0; allergyIndex < user.allergies.length; allergyIndex++) {
                     if (user.allergies[allergyIndex].originalObject.compound.toLowerCase().indexOf(product.ingredients[ingredientIndex].toLowerCase()) > -1) {
                         product.ingredient_analysis.push({
                             name: product.ingredients[ingredientIndex],
                             analysis: 'SENSITIVE'
-                        })
-                    } else {
-                        product.ingredient_analysis.push({
-                            name: product.ingredients[ingredientIndex],
-                            analysis: 'NOT_SENSITIVE'
-                        })
+                        });
+                        isSensetive = true;
+                        break;
                     }
+                }
+                if(!isSensetive) {
+                    product.ingredient_analysis.push({
+                        name: product.ingredients[ingredientIndex],
+                        analysis: 'NOT_SENSITIVE'
+                    })
                 }
             }
         }
