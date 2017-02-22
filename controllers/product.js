@@ -20,6 +20,7 @@ exports.productGet = function(req, res) {
                 User.findById(userId , function(err, user) {
                     if(user){
                         markProblematicIngredients(user,product);
+                        saveUserSearch(user,product);
                     }
                     res.send(product);
                 });
@@ -67,4 +68,9 @@ function markProblematicIngredients(user,product){
 
         product._doc.ingredient_analysis = product.ingredient_analysis;
     }
+}
+
+function saveUserSearch(user,product){
+    user.searches.push(product);
+    user.save();
 }
