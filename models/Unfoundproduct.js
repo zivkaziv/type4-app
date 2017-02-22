@@ -17,6 +17,7 @@ var unfoundProductSchema = new mongoose.Schema({
     image_url: String,
     scrape_result: String,
     scraped_time: Date,
+    error: String,
     ingredients : [String]
 }, schemaOptions);
 

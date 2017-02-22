@@ -37,7 +37,7 @@ exports.scrapeProduct = function(barcodeId){
                         let $ = cheerio.load(html);
                         product.name = $('#productTitle').text().trim();
                         product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
-                        product.image_url = $('#landingImage').attr('data-old-hires') ? ('#landingImage').attr('data-old-hires').trim() : '';
+                        product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
                         product.scrape_result = 'FOUND';
                         product.scraped_time = new Date();
                         let timeOfIngredients = false;
@@ -61,6 +61,7 @@ exports.scrapeProduct = function(barcodeId){
                     }catch (err){
                         unfoundProduct.barcode_id = product.barcode_id;
                         unfoundProduct.scrape_result = 'NOT_FOUND';
+                        unfoundProduct.error = err;
                         reject(unfoundProduct);
                     }
                 });
