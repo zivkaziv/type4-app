@@ -39,6 +39,7 @@ exports.scrape = function(barcodeId){
                         product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
                         product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
                         product.scrape_result = 'FOUND';
+                        product.scraper_strategy = 'amazon-us';
                         product.scraped_time = new Date();
                         let timeOfIngredients = false;
                         $('#importantInformation .content').contents().each(function () {
