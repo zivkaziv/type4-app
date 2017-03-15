@@ -8,7 +8,7 @@ exports.getProduct =  function(barcodeId){
     //check if it's exist in DB. if not scrape it and save it in DB;
     return new Promise((resolve,reject) => {
         Product.findOne({ barcode_id: barcodeId }, function(err, product) {
-            if(!product) {
+            if(!product || product.ingredients.length == 0) {
                 ProductScraper.scrapeProduct(barcodeId)
                     .then(function (product) {
                         product.number_of_searches = 1;
