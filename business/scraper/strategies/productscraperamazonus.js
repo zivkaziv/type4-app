@@ -32,7 +32,24 @@ exports.scrape = function(barcodeId){
             if(product.amazon_id) {
                 //Scan amazon in order to find the ingredients and the rest of the details
                 console.log(AMAZON_PRODUCT_URL + product.amazon_id);
-                request(AMAZON_PRODUCT_URL + product.amazon_id, function (error, response, html) {
+                req = request.defaults({
+                    jar: true,                 // save cookies to jar
+                    rejectUnauthorized: false,
+                    followAllRedirects: true   // allow redirections
+                });
+
+                const options = {
+                    url: AMAZON_PRODUCT_URL + product.amazon_id,
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Accept-Charset': 'utf-8',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
+                    }
+                };
+
+                // request(AMAZON_PRODUCT_URL + product.amazon_id, function (error, response, html) {
+                request(options, function (error, response, html) {
                     try {
                         let $ = cheerio.load(html);
                         if($('img').attr('src').indexOf('Captcha') > -1){
