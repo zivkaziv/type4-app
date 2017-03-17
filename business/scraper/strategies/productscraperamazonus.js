@@ -35,6 +35,9 @@ exports.scrape = function(barcodeId){
                 request(AMAZON_PRODUCT_URL + product.amazon_id, function (error, response, html) {
                     try {
                         let $ = cheerio.load(html);
+                        if($('img').attr('src').indexOf('Captcha') > -1){
+                            console.log('Captcha was requested for barcode ID - ' + barcodeId + ' - AmazonId - ' + product.amazon_id );
+                        }
                         product.name = $('#productTitle').text().trim();
                         product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
                         product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
