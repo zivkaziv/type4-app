@@ -11,7 +11,7 @@ const BARCODE_FINDER_URL =  "http://www.upcitemdb.com/upc/";
 const AMAZON_PRODUCT_URL =  "http://www.amazon.com/dp/";
 
 exports.scrape = function(barcodeId){
-    return new Promise((resolve,reject) => {
+    return new Promise((reject,resolve) => {
         let product = new Product();
         let unfoundProduct = new UnfoundProduct();
         product.barcode_id = barcodeId;
