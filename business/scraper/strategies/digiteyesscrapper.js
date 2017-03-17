@@ -9,7 +9,7 @@ const DIGITAL_EYES_URL = "https://www.digit-eyes.com/gtin/v2_0/?language=en&app_
 const AUTH_KEY = 'Ab67K1y9g0Cp7Om9';
 
 exports.scrape = function(barcodeId){
-    return new Promise((reject,resolve) => {
+    return new Promise((resolve,reject) => {
         let product = new Product();
         let unfoundProduct = new UnfoundProduct();
         product.barcode_id = barcodeId;
@@ -47,7 +47,7 @@ exports.scrape = function(barcodeId){
             //     We need to get it from another site
             // }
 
-            if(product.name === '') {
+            if(!product.name || product.name === '') {
                 unfoundProduct.barcode_id = product.barcode_id;
                 unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_DIGIT_EYES_DB';
                 reject(unfoundProduct);

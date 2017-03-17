@@ -9,6 +9,7 @@ exports.scrapeProduct = function(barcodeId){
         amazonUsScraper.scrape(barcodeId).then(function(product){
             resolve(product);
         },function(err){
+            console.log(err);
             digitalEysScraper.scrape(barcodeId).then(function(product){
                 resolve(product);
             },function(err){
