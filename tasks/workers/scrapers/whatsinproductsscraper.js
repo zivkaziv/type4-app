@@ -6,9 +6,14 @@
 const cheerioReq = require("cheerio-req");
 const URL = 'https://www.whatsinproducts.com/types/index/1';
 
-exports.buildProducts = function(){
-    var products = [];
-    cheerioReq(URL, (err, $) => {
-       products = $('a');
-    });
+exports.whatsInProductScraper = class WhatsInProductScraper{
+    constructor() {
+    }
+
+    scrapeProducts() {
+        var products = [];
+        cheerioReq(URL, (err, $) => {
+            products = $('a');
+        });
+    }
 };

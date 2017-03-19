@@ -28,7 +28,7 @@ exports.scrape = function(barcodeId){
             if(productFromServer.return_code === '000'){
                 product.name =productFromServer.description;
                 product.image_url =productFromServer.image;
-                product.ingredients = productFromServer.ingredients.replace(/^\s+|\s+$/g, "").split(/\s*,\s*/);;
+                product.ingredients = productFromServer.ingredients ? productFromServer.ingredients.replace(/^\s+|\s+$/g, "").split(/\s*,\s*/) : [];
                 product.product_url = productFromServer.product_web_page;
                 product.scraper_strategy = 'digit-eye';
                 product.scraped_time = new Date();

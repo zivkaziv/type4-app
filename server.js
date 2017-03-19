@@ -23,6 +23,7 @@ var contactController = require('./controllers/contact');
 var productController = require('./controllers/product');
 var componentController = require('./controllers/component');
 var allergiesController = require('./controllers/allergies');
+var scrapingController = require('./controllers/scraping');
 
 var app = express();
 
@@ -69,7 +70,7 @@ app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/product/:pId',productController.productGet);
 app.get('/component',componentController.componentGet);
-app.post('/component',componentController.componentPost);
+app.post('/scrapewhatsinproduct',scrapingController.whatsInProductScrapePost);
 
 app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
 app.get('/allergies',allergiesController.getAllAllergiesGet);
