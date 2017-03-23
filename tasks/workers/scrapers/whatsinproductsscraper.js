@@ -41,7 +41,7 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
 
     scrapeProductsFromQueue(){
         return setInterval(function() {
-            ScrapedProduct.findOne({ "ingredients":  {$size: 0}}, function(err, productToScrape) {
+            ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
                 if(productToScrape) {
                     console.log('start scrape - ' + productToScrape.name);
                     cheerioReq(productToScrape.product_url, (err, $) => {
