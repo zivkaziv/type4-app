@@ -73,13 +73,13 @@ exports.scrape = function(barcodeId){
 
                         });
                         if(product.name !== '') {
-                            if(product.ingredients.length == 0){
-                                unfoundProduct.barcode_id = product.barcode_id;
-                                unfoundProduct.amazon_id = product.amazon_id;
-                                unfoundProduct.name = product.name;
-                                unfoundProduct.scrape_result = 'NO_INGREDIENTS';
-                                reject(unfoundProduct);
-                            }
+                            // if(product.ingredients.length == 0){
+                            //     unfoundProduct.barcode_id = product.barcode_id;
+                            //     unfoundProduct.amazon_id = product.amazon_id;
+                            //     unfoundProduct.name = product.name;
+                            //     unfoundProduct.scrape_result = 'NO_INGREDIENTS';
+                            //     reject(unfoundProduct);
+                            // }
                             resolve(product);
                         }else{
                             unfoundProduct.barcode_id = product.barcode_id;
