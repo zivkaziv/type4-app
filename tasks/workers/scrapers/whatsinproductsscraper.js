@@ -62,7 +62,7 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
                         // productToScrape.
                         if(productToScrape.ingredients.length === 0){
                             console.log('delete product - ' + productToScrape.name);
-                            productToScrape.delete();
+                            productToScrape.remove().exec();
                         }else {
                             console.log('save product - ' + productToScrape.name);
                             productToScrape.save();
