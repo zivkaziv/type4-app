@@ -62,6 +62,8 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
                         // productToScrape.
                         productToScrape.save();
                     });
+                }else{
+                    console.log('no products');
                 }
             });
         }, 10000);
