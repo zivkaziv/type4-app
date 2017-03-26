@@ -76,6 +76,11 @@ app.post('/scrapewhatsinproduct',scrapingController.whatsInProductScrapePost);
 app.post('/scrapewhatsinproductstart',scrapingController.whatsInProductScrapePostStart);
 app.post('/scrapewhatsinproductstop',scrapingController.whatsInProductScrapePostStop);
 
+app.post('/scrapeunilever',scrapingController.unileverScrapePost);
+app.post('/scrapeunileverstart',scrapingController.unileverScrapePostStart);
+app.post('/scrapeunilevertstop',scrapingController.unileverScrapePostStop);
+
+
 app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
 app.get('/allergies',allergiesController.getAllAllergiesGet);
 
