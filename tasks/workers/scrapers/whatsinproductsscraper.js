@@ -41,11 +41,15 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
 
     scrapeProductsFromQueue(){
         return setInterval(function() {
-            ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
+            // ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
+            ScrapedProduct.findOne({ "ingredients":  {$size: 0}}, function(err, productToScrape) {
                 if(productToScrape) {
                     console.log('start scrape - ' + productToScrape.name);
                     cheerioReq(productToScrape.product_url, (err, $) => {
                         var ingredientsHtml = $('.rslt_prd_hldr .brnd_srch_chem_name');
+                        if(ingredientsHtml.length === 0){
+                            ingredientsHtml = $('.rslt_prd_hldr .eu_othr_feild1_name.eu_chemical_name a');
+                        }
                         for( let ingredientIndex = 0 ; ingredientIndex < ingredientsHtml.length;ingredientIndex++ ){
                             productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim())
                         }
