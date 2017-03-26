@@ -70,6 +70,8 @@ app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/product/:pId',productController.productGet);
 app.get('/component',componentController.componentGet);
+
+
 app.post('/scrapewhatsinproduct',scrapingController.whatsInProductScrapePost);
 app.post('/scrapewhatsinproductstart',scrapingController.whatsInProductScrapePostStart);
 app.post('/scrapewhatsinproductstop',scrapingController.whatsInProductScrapePostStop);

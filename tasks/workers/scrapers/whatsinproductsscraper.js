@@ -60,7 +60,13 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
                         productToScrape.scrape_result = 'FOUND';
                         productToScrape.category = $($('.breadcrumbs')[1]).text().split('::')[0].trim();
                         // productToScrape.
-                        productToScrape.save();
+                        if(productToScrape.ingredients.length === 0){
+                            console.log('delete product - ' + productToScrape.name);
+                            productToScrape.delete();
+                        }else {
+                            console.log('save product - ' + productToScrape.name);
+                            productToScrape.save();
+                        }
                     });
                 }else{
                     console.log('no products');
