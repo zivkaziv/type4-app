@@ -6,11 +6,17 @@ var ScrapedProduct = require('../../../models/Scrapedprodcut');
 const cheerioReq = require("cheerio-req");
 
 const BRANDS_URL = 'https://www.unilever.co.uk/brands/whats-in-our-products/brands-and-products.json';
-const PRODCUTS_URL = 'https://www.unilever.co.uk/brands/whats-in-our-products/brands-and-products.json?brand=';
-const PRODCUT_BASE_URL = 'https://www.unilever.co.uk';
+const PRODUCTS_URL = 'https://www.unilever.co.uk/brands/whats-in-our-products/brands-and-products.json?brand=';
+const PRODUCT_BASE_URL = 'https://www.unilever.co.uk';
+const SCRAPER_STRATEGY = 'unilever.uk';
 
-exports.UniliverScraper = class UniliverScraper {
+
+exports.UnileverScraper = class UnileverScraper {
     constructor() {
+    }
+
+    getScrapeStrategy(){
+        return SCRAPER_STRATEGY;
     }
 
     addProductsToQueue() {
@@ -63,11 +69,31 @@ exports.UniliverScraper = class UniliverScraper {
         }, 10000);
     }
 
+    handleProduct(productToScrape){
+        cheerioReq(productToScrape.product_url, (err, $) => {
+            var ingredientsHtml = $('.wiop__product-page__ingredients-list--title');
+            for( let ingredientIndex = 0 ; ingredientIndex < ingredientsHtml.length;ingredientIndex++ ){
+                productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().replace('Propellant','').trim().replace(/\s/g, " "))
+            }
+            productToScrape.number_of_searches = 0;
+            productToScrape.scraped_time = new Date();
+            productToScrape.scrape_result = 'FOUND';
+            // productToScrape.
+            if(productToScrape.ingredients.length === 0){
+                console.log('delete product - ' + productToScrape.name);
+                productToScrape.remove();
+            }else {
+                console.log('save product - ' + productToScrape.name);
+                productToScrape.save();
+            }
+        });
+    }
+
     handleBrand(brand){
         console.log(brand.value);
         let page = 0;
         let totalNumberOfPages = 0;
-        let productsUrl = PRODCUTS_URL + brand.value + '&page=' + page;
+        let productsUrl = PRODUCTS_URL + brand.value + '&page=' + page;
         const options = {
             url: productsUrl,
             method: 'GET',
@@ -83,7 +109,7 @@ exports.UniliverScraper = class UniliverScraper {
             totalNumberOfPages = Math.ceil(response.total / response.perPage);
 
             for(page = 0; page < totalNumberOfPages; page++){
-                let productsUrl = PRODCUTS_URL + brand.value + '&page=' + page;
+                let productsUrl = PRODUCTS_URL + brand.value + '&page=' + page;
                 const options = {
                     url: productsUrl,
                     method: 'GET',
@@ -98,8 +124,8 @@ exports.UniliverScraper = class UniliverScraper {
                     for(let productIndex = 0; productIndex < products.length; productIndex++){
                         let scrapedProduct = new ScrapedProduct({
                             name : products[productIndex].title,
-                            product_url : PRODCUT_BASE_URL + products[productIndex].url,
-                            scraper_strategy:"unilever.uk",
+                            product_url : PRODUCT_BASE_URL + products[productIndex].url,
+                            scraper_strategy:SCRAPER_STRATEGY,
                             ingredients : []
                         });
 

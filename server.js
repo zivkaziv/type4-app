@@ -73,12 +73,11 @@ app.get('/component',componentController.componentGet);
 
 
 app.post('/scrapewhatsinproduct',scrapingController.whatsInProductScrapePost);
-app.post('/scrapewhatsinproductstart',scrapingController.whatsInProductScrapePostStart);
-app.post('/scrapewhatsinproductstop',scrapingController.whatsInProductScrapePostStop);
-
 app.post('/scrapeunilever',scrapingController.unileverScrapePost);
-app.post('/scrapeunileverstart',scrapingController.unileverScrapePostStart);
-app.post('/scrapeunilevertstop',scrapingController.unileverScrapePostStop);
+
+app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
+app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);
+
 
 
 app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
