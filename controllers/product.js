@@ -37,12 +37,14 @@ exports.productGet = function(req, res) {
 function markProblematicIngredients(user,product){
     if(user && product){
         product.ingredient_analysis = [];
+        product.is_safe = true;
         if(user.allergies.length == 0){
             for(let ingredientIndex = 0; ingredientIndex <  product.ingredients.length; ingredientIndex++){
                 product.ingredient_analysis.push({
                     name: product.ingredients[ingredientIndex],
                     analysis: 'UNKNOWN'
                 });
+                product.is_safe = false;
             }
         }else {
             for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
@@ -54,6 +56,7 @@ function markProblematicIngredients(user,product){
                             analysis: 'SENSITIVE'
                         });
                         isSensetive = true;
+                        product.is_safe = false;
                         break;
                     }
                 }
@@ -67,6 +70,7 @@ function markProblematicIngredients(user,product){
         }
 
         product._doc.ingredient_analysis = product.ingredient_analysis;
+        product._doc.is_safe = product.is_safe;
     }
 }
 

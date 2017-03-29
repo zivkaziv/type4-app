@@ -4,9 +4,11 @@
 
 var scraperWhatsInProductsObject = require('../tasks/workers/scrapers/whatsinproductsscraper');
 var scraperUnileverObject = require('../tasks/workers/scrapers/unileverproductsscraper');
-
+var smartLabelObject = require('../tasks/workers/scrapers/smartlabelscraper');
 var commonScraper = require('../tasks/workers/scrapers/commonscraper');
+
 var scrapeInterval;
+
 exports.whatsInProductScrapePost = function(req, res) {
     var scraper = new scraperWhatsInProductsObject.whatsInProductScraper();
     scraper.addProductsToQueue(req.param('letter'));
@@ -19,6 +21,11 @@ exports.unileverScrapePost = function(req, res) {
     res.status(200).send({ msg: 'started' });
 };
 
+exports.smartLabelScrapePost = function(req, res) {
+    var scraper = new smartLabelObject.SmartLabelScraper();
+    scraper.addProductsToQueue();
+    res.status(200).send({ msg: 'started' });
+};
 
 
 //Common

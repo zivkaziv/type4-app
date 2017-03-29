@@ -39,36 +39,6 @@ exports.UnileverScraper = class UnileverScraper {
         });
     }
 
-    scrapeProductsFromQueue(){
-        return setInterval(function() {
-            // ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
-            ScrapedProduct.findOne({$and:[{'scraper_strategy' : 'unilever.uk'},{ "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
-                if(productToScrape) {
-                    console.log('start scrape - ' + productToScrape.name);
-                    cheerioReq(productToScrape.product_url, (err, $) => {
-                        var ingredientsHtml = $('.wiop__product-page__ingredients-list--title');
-                        for( let ingredientIndex = 0 ; ingredientIndex < ingredientsHtml.length;ingredientIndex++ ){
-                            productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().replace('Propellant','').trim().replace(/\s/g, " "))
-                        }
-                        productToScrape.number_of_searches = 0;
-                        productToScrape.scraped_time = new Date();
-                        productToScrape.scrape_result = 'FOUND';
-                        // productToScrape.
-                        if(productToScrape.ingredients.length === 0){
-                            console.log('delete product - ' + productToScrape.name);
-                            productToScrape.remove();
-                        }else {
-                            console.log('save product - ' + productToScrape.name);
-                            productToScrape.save();
-                        }
-                    });
-                }else{
-                    console.log('no products');
-                }
-            });
-        }, 10000);
-    }
-
     handleProduct(productToScrape){
         cheerioReq(productToScrape.product_url, (err, $) => {
             var ingredientsHtml = $('.wiop__product-page__ingredients-list--title');
