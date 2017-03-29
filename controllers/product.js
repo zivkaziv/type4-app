@@ -70,7 +70,7 @@ function markProblematicIngredients(user,product){
         }
 
         product._doc.ingredient_analysis = product.ingredient_analysis;
-        product._doc.is_safe = product.is_safe;
+        product._doc.analysis_result = product.is_safe? 'SAFE' : 'NOT_SAFE';
     }
 }
 
