@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var random = require('mongoose-random');
 
 var schemaOptions = {
     timestamps: true,
@@ -21,6 +22,7 @@ var scrapedProductSchema = new mongoose.Schema({
     scraper_strategy : String
 }, schemaOptions);
 
+scrapedProductSchema.plugin(random, { path: 'r' });
 var ScrapedProduct = mongoose.model('ScrapedProduct', scrapedProductSchema);
 
 module.exports = ScrapedProduct;

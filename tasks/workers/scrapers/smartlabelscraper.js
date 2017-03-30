@@ -3,6 +3,7 @@ const request = require('request');
 
 var ScrapedProduct = require('../../../models/Scrapedprodcut');
 var Product = require('../../../models/Product');
+var url = require('url');
 
 const cheerioReq = require("cheerio-req");
 const cheerio = require('cheerio');
@@ -57,61 +58,108 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         cheerioReq(url, (err, $) => {
             //in case it's not angular
             if($.html().indexOf('ui-view') === -1) {
-                var ingredientsHtml = $('.ingredients__list li');
-                for (let ingredientIndex = 0; ingredientIndex < ingredientsHtml.length; ingredientIndex++) {
-                    productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim().replace(/\s/g, " "))
+                if(productToScrape.product_url.indexOf('index.cfm') === -1) {
+                    this.extractProductFromHTML($, productToScrape);
+                }else{
+                    this.extractProductByCFM($,productToScrape);
                 }
-                productToScrape.image_url = $('.top__image').attr('src');
-                productToScrape.barcode_id = $('.top__text__upc').text().trim();
-                productToScrape.scraped_time = new Date();
+            }else{//This page in angular - we have url for get this item
+                this.extractProductWithRestAPI(productToScrape);
+            }
+        });
+    }
+
+    extractProductByCFM($,productToScrape) {
+        var urlParts = url.parse(productToScrape.product_url,true);
+        urlParts.origin = urlParts.protocol + '//' + urlParts.host;
+        productToScrape.barcode_id = $('.upc').text().trim();
+        productToScrape.image_url = urlParts.origin + $('.product-sub-section img').attr('src').substring(1);
+
+        let productId = urlParts.query.product;
+        console.log(urlParts.origin + '/sections/ingredients.cfm?product=' + productId);
+        cheerioReq(urlParts.origin + '/sections/ingredients.cfm?product=' + productId,  (err, $) => {
+            let ingredients = $('ul li a .list-title');
+            for( let ingredientIndex = 0; ingredientIndex < ingredients.length;  ingredientIndex++){
+                productToScrape.ingredients.push($(ingredients[ingredientIndex]).text().trim());
+            }
+            productToScrape.scraped_time = new Date();
+            productToScrape.number_of_searches = 0;
+            productToScrape.scrape_result = 'FOUND';
+
+            // productToScrape.
+            if (productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')) {
+                console.log('no ingredients for product - ' + productToScrape.name);
+                // productToScrape.remove();
+            } else {
+                if (productToScrape.barcode_id && productToScrape.barcode_id !== '') {
+                    //Save it as product
+                    console.log('save as product - ' + productToScrape.name);
+
+                } else {
+                    console.log('save as scraped product - ' + productToScrape.name);
+                }
+                productToScrape.save();
+            }
+        });
+    }
+
+
+    extractProductFromHTML($, productToScrape) {
+        var ingredientsHtml = $('.ingredients__list li');
+        for (let ingredientIndex = 0; ingredientIndex < ingredientsHtml.length; ingredientIndex++) {
+            productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim().replace(/\s/g, " "))
+        }
+        productToScrape.image_url = $('.top__image').attr('src');
+        productToScrape.barcode_id = $('.top__text__upc').text().trim();
+        productToScrape.scraped_time = new Date();
+        productToScrape.number_of_searches = 0;
+        productToScrape.scrape_result = 'FOUND';
+        // productToScrape.
+        if (productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')) {
+            console.log('not ingredients for product - ' + productToScrape.name);
+            // productToScrape.remove();
+        } else {
+            if (productToScrape.barcode_id && productToScrape.barcode_id !== '') {
+                //Save it as product
+                console.log('save product - ' + productToScrape.name);
+
+            } else {
+                console.log('save as scraped product - ' + productToScrape.name);
+            }
+            productToScrape.save();
+        }
+    }
+
+    extractProductWithRestAPI(productToScrape) {
+        let productId = productToScrape.product_url.split('/').pop();
+        console.log(PRODUCT_URL + productId);
+        request(PRODUCT_URL + productId, function (err, response) {
+            var product = JSON.parse(response.body);
+            if (product) {
+                productToScrape.ingredients = product.rawIngredients.split(",").map((item) => item.trim());
+                productToScrape.barcode_id = product.upc;
+                productToScrape.image_url = product.marketingImage.high;
+                productToScrape.name = product.title;
+                productToScrape.scraped_time = new Date(product.dateCollected);
                 productToScrape.number_of_searches = 0;
                 productToScrape.scrape_result = 'FOUND';
-                // productToScrape.
-                if(productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')){
-                    console.log('delete product - ' + productToScrape.name);
-                    productToScrape.remove();
-                }else {
-                    if(productToScrape.barcode_id &&  productToScrape.barcode_id !== ''){
-                        //Save it as product
-                        console.log('save product - ' + productToScrape.name);
 
-                    }else{
+                // productToScrape.
+                if (productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')) {
+                    console.log('delete product - ' + productToScrape.name);
+                    // productToScrape.remove();
+                } else {
+                    if (productToScrape.barcode_id && productToScrape.barcode_id !== '') {
+                        //Save it as product
+                        console.log('not ingredients for product - ' + productToScrape.name);
+
+                    } else {
                         console.log('save as scraped product - ' + productToScrape.name);
                     }
                     productToScrape.save();
                 }
-            }else{//This page in angular - we have url for get this item
-                let productId = productToScrape.product_url.split('/').pop();
-                console.log(PRODUCT_URL + productId);
-                request(PRODUCT_URL + productId,function(err,response){
-                    var product = JSON.parse(response.body);
-                    if(product){
-                        productToScrape.ingredients = product.rawIngredients.split(",").map((item)=>item.trim());
-                        productToScrape.barcode_id = product.upc;
-                        productToScrape.image_url = product.marketingImage.high;
-                        productToScrape.name = product.title;
-                        productToScrape.scraped_time = new Date(product.dateCollected);
-                        productToScrape.number_of_searches = 0;
-                        productToScrape.scrape_result = 'FOUND';
-
-                        // productToScrape.
-                        if(productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')){
-                            console.log('delete product - ' + productToScrape.name);
-                            productToScrape.remove();
-                        }else {
-                            if(productToScrape.barcode_id &&  productToScrape.barcode_id !== ''){
-                                //Save it as product
-                                console.log('save product - ' + productToScrape.name);
-
-                            }else{
-                                console.log('save as scraped product - ' + productToScrape.name);
-                            }
-                            productToScrape.save();
-                        }
-                    }else{
-                        console.log('no data for product');
-                    }
-                });
+            } else {
+                console.log('no data for product');
             }
         });
     }
