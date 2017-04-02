@@ -184,6 +184,16 @@ exports.SmartLabelScraper = class SmartLabelScraper {
             var product = JSON.parse(response.body);
             if (product) {
                 productToScrape.ingredients = product.rawIngredients.split(",").map((item) => item.trim());
+                if(productToScrape.ingredients.length == 0){
+                    try {
+                        productToScrape.ingredients = product.ingredientSection.ingredients.split(",").map((item) => item.trim());
+                        productToScrape.ingredients.push(product.ingredientSection.activeIngredients.split(",").map((item) => item.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.ingredientClaims.split(",").map((item) => item.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.ingredientSymbols.split(",").map((item) => item.trim()));
+                    }catch(err){
+                        console.log(err);
+                    }
+                }
                 productToScrape.barcode_id = product.upc;
                 productToScrape.image_url = product.marketingImage.high;
                 productToScrape.name = product.title;
