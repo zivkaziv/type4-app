@@ -186,7 +186,8 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         request(PRODUCT_URL + productId, function (err, response) {
             var product = JSON.parse(response.body);
             if (product) {
-                productToScrape.ingredients = product.rawIngredients.split(",").map((item) => item.trim());
+                productToScrape.ingredients = product.rawIngredients != null ? product.rawIngredients.split(",").map((item) => item.trim()) : [];
+
                 if(productToScrape.ingredients.length == 0){
                     try {
                         productToScrape.ingredients = product.ingredientSection.ingredients.split(",").map((item) => item.trim());

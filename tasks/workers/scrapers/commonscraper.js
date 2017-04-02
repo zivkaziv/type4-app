@@ -21,7 +21,7 @@ exports.CommonScraper = class CommonScraper {
         var houseHoldDBScraper = new houseHoldDBScraperObject.HouseHoldDBScraper();
 
         return setInterval(function() {
-            ScrapedProduct.count().exec(function(err, count) {
+            ScrapedProduct.count({"ingredients": {$size: 0}}).exec(function(err, count) {
                 // ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
                 let random = Math.floor(Math.random() * count);
                 // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
