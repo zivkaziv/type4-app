@@ -147,6 +147,9 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         if(ingredientsHtml.length == 0){
             ingredientsHtml = $('#ingredients a');
         }
+        if(ingredientsHtml.length == 0){
+            ingredientsHtml = $('.ingredientdetails a');
+        }
         for (let ingredientIndex = 0; ingredientIndex < ingredientsHtml.length; ingredientIndex++) {
             productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim().replace(/\s/g, " "))
         }
