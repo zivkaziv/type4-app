@@ -77,6 +77,7 @@ app.post('/scrapeunilever',scrapingController.unileverScrapePost);
 app.post('/smartlabel',scrapingController.smartLabelScrapePost);
 app.post('/householddb',scrapingController.houseHoldDBScrapePost);
 app.post('/skindeep',scrapingController.skinDeepScrapePost);
+app.post('/lorealusa',scrapingController.lorealParisUsaScrapePost);
 
 app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
 app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);

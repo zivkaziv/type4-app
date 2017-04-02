@@ -8,6 +8,7 @@ const cheerioReq = require("cheerio-req");
 const URL = 'https://www.whatsinproducts.com/types/index/TypeLanguage.search:search/TypeLanguage.filter:%LETTER%/TypeLanguage.lang_id:1';
 const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 const SCRAPER_STRATEGY = 'whatsInProductScraper';
+
 exports.whatsInProductScraper = class WhatsInProductScraper {
     constructor() {
     }
@@ -26,7 +27,7 @@ exports.whatsInProductScraper = class WhatsInProductScraper {
             for (let itemIndex = 0; itemIndex < results.length; itemIndex++) {
                 let scrapeProduct = new ScrapedProduct({
                     product_url: "https://www.whatsinproducts.com" + results[itemIndex].attribs.href,
-                    scraper_strategy:"whatsinproducts",
+                    scraper_strategy:SCRAPER_STRATEGY,
                     name:$(results[itemIndex]).text().replace(/(\s\s\s*)/g, ''),
                     ingredients : []
                 });
