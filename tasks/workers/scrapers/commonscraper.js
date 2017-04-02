@@ -8,6 +8,7 @@ const cheerioReq = require("cheerio-req");
 var unileverScraperObject  = require('./unileverproductsscraper');
 var whatsInProductScraperObject  = require('./whatsinproductsscraper');
 var smartLabelScraperObject  = require('./smartlabelscraper');
+var houseHoldDBScraperObject  = require('./householddbscraper');
 
 exports.CommonScraper = class CommonScraper {
     constructor() {
@@ -17,6 +18,7 @@ exports.CommonScraper = class CommonScraper {
         var unileverScraper = new unileverScraperObject.UnileverScraper();
         var whatsInProductScraper = new whatsInProductScraperObject.whatsInProductScraper();
         var smartLabelScraper = new smartLabelScraperObject.SmartLabelScraper();
+        var houseHoldDBScraper = new houseHoldDBScraperObject.HouseHoldDBScraper();
 
         return setInterval(function() {
             ScrapedProduct.count().exec(function(err, count) {
@@ -35,6 +37,9 @@ exports.CommonScraper = class CommonScraper {
                                 break;
                             case smartLabelScraper.getScrapeStrategy():
                                 smartLabelScraper.handleProduct(productToScrape);
+                                break;
+                            case houseHoldDBScraper.getScrapeStrategy():
+                                houseHoldDBScraper.handleProduct(productToScrape);
                                 break;
                             default:
                                 console.log('Unknown strategy for ' + productToScrape.scraper_strategy);

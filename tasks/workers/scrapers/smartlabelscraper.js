@@ -211,10 +211,9 @@ exports.SmartLabelScraper = class SmartLabelScraper {
                 } else {
                     if (productToScrape.barcode_id && productToScrape.barcode_id !== '') {
                         //Save it as product
-                        console.log('not ingredients for product - ' + productToScrape.name);
-
-                    } else {
                         console.log('save as scraped product - ' + productToScrape.name);
+                    } else {
+                        console.log('not ingredients for product - ' + productToScrape.name);
                     }
                     productToScrape.save();
                 }
