@@ -1,0 +1,5 @@
+Group by scraper strategy
+db.getCollection('scrapedproducts').aggregate([
+		{"$group" : {_id:"$scraper_strategy", count:{$sum:1}}}
+	])
+

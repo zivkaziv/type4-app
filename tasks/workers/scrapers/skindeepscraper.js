@@ -34,7 +34,7 @@ exports.SkinDeepScraper = class SkinDeepScraper {
         cheerioReq(options,(err, $) => {
             brands = $('#table-browse tr');
             // for(let brandIndex = 0 ; brandIndex < brands.length; brandIndex++){
-            for(let brandIndex = 1 ; brandIndex < 40; brandIndex++){
+            for(let brandIndex = 1 ; brandIndex <  brands.length; brandIndex++){
                 let numberOfProducts = $(brands[brandIndex]).find('#score_style_small').text().replace(' products','');
                 if(numberOfProducts != '0' && numberOfProducts != '') {
                     this.handleBrand(brands[brandIndex]);

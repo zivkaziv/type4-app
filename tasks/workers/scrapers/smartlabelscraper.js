@@ -190,10 +190,10 @@ exports.SmartLabelScraper = class SmartLabelScraper {
 
                 if(productToScrape.ingredients.length == 0){
                     try {
-                        productToScrape.ingredients = product.ingredientSection.ingredients.split(",").map((item) => item.trim());
-                        productToScrape.ingredients.push(product.ingredientSection.activeIngredients.split(",").map((item) => item.trim()));
-                        productToScrape.ingredients.push(product.ingredientSection.ingredientClaims.split(",").map((item) => item.trim()));
-                        productToScrape.ingredients.push(product.ingredientSection.ingredientSymbols.split(",").map((item) => item.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.ingredients.map((item) => item.name.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.activeIngredients.map((item) => item.name.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.ingredientClaims.map((item) => item.name.trim()));
+                        productToScrape.ingredients.push(product.ingredientSection.ingredientSymbols.map((item) => item.name.trim()));
                     }catch(err){
                         console.log(err);
                     }
