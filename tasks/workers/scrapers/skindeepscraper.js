@@ -11,7 +11,6 @@ const PRODUCT_BASE_URL = 'https://www.ewg.org';
 const BRAND_URL = 'https://www.ewg.org/skindeep/browse.php?brand_id=';
 const SCRAPER_STRATEGY = 'ewg.skindeep.org';
 
-
 exports.SkinDeepScraper = class SkinDeepScraper {
     constructor() {
     }
