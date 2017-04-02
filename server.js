@@ -76,6 +76,7 @@ app.post('/scrapewhatsinproduct',scrapingController.whatsInProductScrapePost);
 app.post('/scrapeunilever',scrapingController.unileverScrapePost);
 app.post('/smartlabel',scrapingController.smartLabelScrapePost);
 app.post('/householddb',scrapingController.houseHoldDBScrapePost);
+app.post('/skindeep',scrapingController.skinDeepScrapePost);
 
 app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
 app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);
