@@ -22,7 +22,8 @@ exports.CommonScraper = class CommonScraper {
             ScrapedProduct.count().exec(function(err, count) {
                 // ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
                 let random = Math.floor(Math.random() * count);
-                ScrapedProduct.findOne({"ingredients": {$size: 0}}).skip(random).exec(function (err, productToScrape) {
+                // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
+                    ScrapedProduct.findOne({"ingredients": {$size: 0}}).skip(random).exec(function (err, productToScrape) {
                     if (productToScrape) {
                         console.log('start scrape - ' + productToScrape.name + ' - strategy - ' + productToScrape.scraper_strategy);
                         switch (productToScrape.scraper_strategy) {

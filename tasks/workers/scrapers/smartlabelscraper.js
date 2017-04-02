@@ -41,9 +41,9 @@ exports.SmartLabelScraper = class SmartLabelScraper {
                   });
 
                   scrapedProduct.save().then(function(res){
-                      console.log(res);
+                      // console.log(res);
                   },function(err){
-                      console.log(err);
+                      // console.log(err);
                   });
             }
         });
@@ -58,7 +58,10 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         cheerioReq(url, (err, $) => {
             //in case it's not angular
             if($.html().indexOf('ui-view') === -1) {
-                if(productToScrape.product_url.indexOf('index.cfm') === -1) {
+                if(productToScrape.product_url.indexOf('servlet.') !== -1){
+                    this.extractProductFromHTML($,productToScrape);
+                }
+                else if(productToScrape.product_url.indexOf('index.cfm') === -1) {
                     this.extractProductFromHTML($, productToScrape);
                 }else{
                     this.extractProductByCFM($,productToScrape);
@@ -103,14 +106,58 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         });
     }
 
+    extractProductByServlet($,productToScrape) {
+        var ingredientsHtml = $('#ingredients-list a');
+
+        for (let ingredientIndex = 0; ingredientIndex < ingredientsHtml.length; ingredientIndex++) {
+            productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim().replace(/\s/g, " "))
+        }
+        productToScrape.image_url = $('.product-image img').attr('src');
+        if(!productToScrape.image_url){
+            productToScrape.image_url = $('.product-image img').attr('src');
+        }
+        productToScrape.barcode_id = $('.top__text__upc').text().trim();
+        if(!productToScrape.barcode_id ){
+            productToScrape.barcode_id = $('.upc').text().trim();
+        }
+        productToScrape.scraped_time = new Date();
+        productToScrape.number_of_searches = 0;
+        productToScrape.scrape_result = 'FOUND';
+        // productToScrape.
+        if (productToScrape.ingredients.length === 0 && (!productToScrape.barcode_id || productToScrape.barcode_id == '')) {
+            console.log('not ingredients for product - ' + productToScrape.name);
+            // productToScrape.remove();
+        } else {
+            if (productToScrape.barcode_id && productToScrape.barcode_id !== '') {
+                //Save it as product
+                console.log('save product - ' + productToScrape.name);
+
+            } else {
+                console.log('save as scraped product - ' + productToScrape.name);
+            }
+            productToScrape.save();
+        }
+    }
 
     extractProductFromHTML($, productToScrape) {
         var ingredientsHtml = $('.ingredients__list li');
+        if(ingredientsHtml.length == 0){
+            ingredientsHtml = $('#ingredients .list-title');
+        }
+        if(ingredientsHtml.length == 0){
+            ingredientsHtml = $('#ingredients a');
+        }
         for (let ingredientIndex = 0; ingredientIndex < ingredientsHtml.length; ingredientIndex++) {
             productToScrape.ingredients.push($($(ingredientsHtml)[ingredientIndex]).text().trim().replace(/\s/g, " "))
         }
         productToScrape.image_url = $('.top__image').attr('src');
+        if(!productToScrape.image_url){
+            productToScrape.image_url = $('.product-image img').attr('src');
+        }
         productToScrape.barcode_id = $('.top__text__upc').text().trim();
+        if(!productToScrape.barcode_id ){
+            productToScrape.barcode_id = $('.upc').text().trim();
+        }
         productToScrape.scraped_time = new Date();
         productToScrape.number_of_searches = 0;
         productToScrape.scrape_result = 'FOUND';
