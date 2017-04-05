@@ -11,6 +11,7 @@ var smartLabelScraperObject  = require('./smartlabelscraper');
 var houseHoldDBScraperObject  = require('./householddbscraper');
 var skinDeepScraperObject  = require('./skindeepscraper');
 var lorealUsaScraperObject  = require('./lorealusascraper');
+var pngMainScraperObject  = require('./PnG/pngmainscraper');
 
 exports.CommonScraper = class CommonScraper {
     constructor() {
@@ -23,6 +24,7 @@ exports.CommonScraper = class CommonScraper {
         var houseHoldDBScraper = new houseHoldDBScraperObject.HouseHoldDBScraper();
         var skinDeepScraper = new skinDeepScraperObject.SkinDeepScraper();
         var lorealUsaScraper = new lorealUsaScraperObject.LorealParisUsaScraper();
+        var pngMainScraper = new pngMainScraperObject.PnGMainScraper();
 
         return setInterval(function() {
             ScrapedProduct.count({"ingredients": {$size: 0}}).exec(function(err, count) {
@@ -33,27 +35,26 @@ exports.CommonScraper = class CommonScraper {
                         try {
                             if (productToScrape) {
                                 console.log('start scrape - ' + productToScrape.name + ' - strategy - ' + productToScrape.scraper_strategy);
-                                switch (productToScrape.scraper_strategy) {
-                                    case unileverScraper.getScrapeStrategy():
-                                        unileverScraper.handleProduct(productToScrape);
-                                        break;
-                                    case whatsInProductScraper.getScrapeStrategy():
-                                        whatsInProductScraper.handleProduct(productToScrape);
-                                        break;
-                                    case smartLabelScraper.getScrapeStrategy():
-                                        smartLabelScraper.handleProduct(productToScrape);
-                                        break;
-                                    case houseHoldDBScraper.getScrapeStrategy():
-                                        houseHoldDBScraper.handleProduct(productToScrape);
-                                        break;
-                                    case skinDeepScraper.getScrapeStrategy():
-                                        skinDeepScraper.handleProduct(productToScrape);
-                                        break;
-                                    case lorealUsaScraper.getScrapeStrategy():
-                                        lorealUsaScraper.handleProduct(productToScrape);
-                                        break;
-                                    default:
-                                        console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
+                                if(productToScrape.scraper_strategy === unileverScraper.getScrapeStrategy()) {
+                                    unileverScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy ===whatsInProductScraper.getScrapeStrategy()) {
+                                    whatsInProductScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === smartLabelScraper.getScrapeStrategy()) {
+                                    smartLabelScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === houseHoldDBScraper.getScrapeStrategy()) {
+                                    houseHoldDBScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === skinDeepScraper.getScrapeStrategy()) {
+                                    skinDeepScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === lorealUsaScraper.getScrapeStrategy()) {
+                                    lorealUsaScraper.handleProduct(productToScrape);
+                                }
+
+                                //Those brands are house of brands, therefore we have one scarper and there
+                                //we have the logic relate to the relevant brand
+                                else if (pngMainScraper.isPnGStrategy(productToScrape.scraper_strategy)) {
+                                    pngMainScraper.handleProduct(productToScrape);
+                                }else{
+                                    console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
                                 }
                             } else {
                                 console.log('no products');

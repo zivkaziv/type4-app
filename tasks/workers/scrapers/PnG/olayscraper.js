@@ -2,16 +2,16 @@
  * Created by ziv on 15/03/2017.
  */
 
-var ScrapedProduct = require('../../../models/Scrapedprodcut');
+var ScrapedProduct = require('../../../../models/Scrapedprodcut');
 
 const cheerioReq = require("cheerio-req");
 const categories = ['facial-cleanser','moisturizer','skin-care-treatment','body-prod'];
 const SCRAPER_STRATEGY = 'olay.com';
 
-const BASE_URL = 'https://www.olay.com/en-us';
-const CATEGORY_URL = 'http://www.lorealparisusa.com/products/{category}/shop-all-products.aspx?size=1000&page=1';
+const BASE_URL = 'https://www.olay.com';
+const CATEGORY_URL = 'https://www.olay.com/en-us/skin-care-products/';
 
-exports.OlayUsaScraper = class OlayUsaScraper {
+exports.OlayScraper = class OlayScraper {
     constructor() {
     }
 
@@ -27,8 +27,7 @@ exports.OlayUsaScraper = class OlayUsaScraper {
 
     handleProduct(productToScrape){
         cheerioReq(productToScrape.product_url, (err, $) => {
-            productToScrape.ingredients = $('.tab-content-container .ingredients p').text().split('•').map((value)=>value.trim())
-            productToScrape.image_url = BASE_URL + $('.product-image-container img').attr('src');
+            productToScrape.ingredients = $('.pdp_ingredients .product_secondary_txt p').first().text().split(',').map((value)=>value.trim());
             productToScrape.number_of_searches = 0;
             productToScrape.scraped_time = new Date();
             productToScrape.scrape_result = 'FOUND';
@@ -45,17 +44,18 @@ exports.OlayUsaScraper = class OlayUsaScraper {
     }
 
     handleCategory(categoryName){
-        let url = CATEGORY_URL.replace('{category}',categoryName);
+        let url = CATEGORY_URL + categoryName;
         console.log('Scrape category - ' + url);
         cheerioReq(url, (err, $) => {
-            var products = $('.subcat-product-box');
+            var products = $('#content-main li');
             for(let productIndex = 0; productIndex < products.length; productIndex++) {
                 try {
                     let product = $(products[productIndex]);
-                    var productName = product.find('.data-product-name').text().trim();
+                    var productName = product.find('.caption h2').text().trim();
 
                     let scrapeProduct = new ScrapedProduct({
-                        product_url: BASE_URL + product.find('a')[1].attribs.href,
+                        product_url: BASE_URL + product.find('.caption h2 a').attr('href'),
+                        image_url: product.find('.product-image img').attr('src'),
                         scraper_strategy: SCRAPER_STRATEGY,
                         name: productName,
                         ingredients: [],

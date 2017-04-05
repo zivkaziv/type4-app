@@ -1,0 +1,48 @@
+
+const supportedStrategies = ['olay.com','headandshoulders.com','febreze.com','gillete.com'];
+var olayScraperObject  = require('./olayscraper');
+var headAndShouldersScraperObject  = require('./headandshouldersscraper');
+var febrezeScraperObject  = require('./febrezescraper');
+var gilleteScraperObject  = require('./gillettescraper');
+
+exports.PnGMainScraper = class PnGMainScraper {
+    constructor() {
+        this.olayScraper =  new olayScraperObject.OlayScraper();
+        this.headAndShouldersScraper =  new headAndShouldersScraperObject.HeadAndSouldersScraper();
+        this.febrezeScraper =  new febrezeScraperObject.FebrezeScraper();
+        this.gilleteScraper =  new gilleteScraperObject.GilleteScraper();
+    }
+
+    addProductsToQueue() {
+        this.olayScraper.addProductsToQueue();
+        this.headAndShouldersScraper.addProductsToQueue();
+        this.febrezeScraper.addProductsToQueue();
+        this.gilleteScraper.addProductsToQueue();
+    }
+
+    isPnGStrategy(strategy){
+        return supportedStrategies.indexOf(strategy) > -1 ? true:false;
+    }
+
+    handleProduct(productToScrape){
+        if(productToScrape && productToScrape.scraper_strategy){
+            switch (productToScrape.scraper_strategy) {
+                case this.olayScraper.getScrapeStrategy():
+                    this.olayScraper.handleProduct(productToScrape);
+                    break;
+                case this.headAndShouldersScraper.getScrapeStrategy():
+                    this.headAndShouldersScraper.handleProduct(productToScrape);
+                    break;
+                case this.febrezeScraper.getScrapeStrategy():
+                    this.febrezeScraper.handleProduct(productToScrape);
+                    break;
+                case this.gilleteScraper.getScrapeStrategy():
+                    this.gilleteScraper.handleProduct(productToScrape);
+                    break;
+                default:
+                    console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
+            }
+        }
+
+    }
+};
