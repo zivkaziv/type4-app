@@ -30,33 +30,37 @@ exports.CommonScraper = class CommonScraper {
                 let random = Math.floor(Math.random() * count);
                 // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
                     ScrapedProduct.findOne({"ingredients": {$size: 0}}).skip(random).exec(function (err, productToScrape) {
-                    if (productToScrape) {
-                        console.log('start scrape - ' + productToScrape.name + ' - strategy - ' + productToScrape.scraper_strategy);
-                        switch (productToScrape.scraper_strategy) {
-                            case unileverScraper.getScrapeStrategy():
-                                unileverScraper.handleProduct(productToScrape);
-                                break;
-                            case whatsInProductScraper.getScrapeStrategy():
-                                whatsInProductScraper.handleProduct(productToScrape);
-                                break;
-                            case smartLabelScraper.getScrapeStrategy():
-                                smartLabelScraper.handleProduct(productToScrape);
-                                break;
-                            case houseHoldDBScraper.getScrapeStrategy():
-                                houseHoldDBScraper.handleProduct(productToScrape);
-                                break;
-                            case skinDeepScraper.getScrapeStrategy():
-                                skinDeepScraper.handleProduct(productToScrape);
-                                break;
-                            case lorealUsaScraper.getScrapeStrategy():
-                                lorealUsaScraper.handleProduct(productToScrape);
-                                break;
-                            default:
-                                console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
+                        try {
+                            if (productToScrape) {
+                                console.log('start scrape - ' + productToScrape.name + ' - strategy - ' + productToScrape.scraper_strategy);
+                                switch (productToScrape.scraper_strategy) {
+                                    case unileverScraper.getScrapeStrategy():
+                                        unileverScraper.handleProduct(productToScrape);
+                                        break;
+                                    case whatsInProductScraper.getScrapeStrategy():
+                                        whatsInProductScraper.handleProduct(productToScrape);
+                                        break;
+                                    case smartLabelScraper.getScrapeStrategy():
+                                        smartLabelScraper.handleProduct(productToScrape);
+                                        break;
+                                    case houseHoldDBScraper.getScrapeStrategy():
+                                        houseHoldDBScraper.handleProduct(productToScrape);
+                                        break;
+                                    case skinDeepScraper.getScrapeStrategy():
+                                        skinDeepScraper.handleProduct(productToScrape);
+                                        break;
+                                    case lorealUsaScraper.getScrapeStrategy():
+                                        lorealUsaScraper.handleProduct(productToScrape);
+                                        break;
+                                    default:
+                                        console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
+                                }
+                            } else {
+                                console.log('no products');
+                            }
+                        }catch (err){
+                            console.log('Error ' + err);
                         }
-                    } else {
-                        console.log('no products');
-                    }
                 });
             });
         }, 10000);

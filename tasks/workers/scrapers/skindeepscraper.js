@@ -65,41 +65,45 @@ exports.SkinDeepScraper = class SkinDeepScraper {
     }
 
     handleBrand(brand){
-        console.log(brand.value);
-        let $ = cheerio.load(brand);
-        var brandUrl = $(brand).find('a').first().attr('href');
-        let productsUrl = PRODUCT_BASE_URL + brandUrl + 'products/';
-        const options = {
-            url: productsUrl,
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Charset': 'utf-8',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
-            }
-        };
-
-        cheerioReq(options,(err,$) => {
-            let brand_id = $('input[name="brand_id"]').attr('value');
-            //this one in order to get all the products of the brand;
-            options.url = BRAND_URL + brand_id + '&&showmore=products&atatime=250';
-            cheerioReq(options, (err, $) => {
-                let products = $('#table-browse tr');
-                for (let productIndex = 1; productIndex < products.length; productIndex++) {
-                    let scrapedProduct = new ScrapedProduct({
-                        name: $($(products[productIndex]).find('a')[1]).text(),
-                        product_url: PRODUCT_BASE_URL + $($(products[productIndex]).find('a')[1]).attr('href'),
-                        scraper_strategy: SCRAPER_STRATEGY,
-                        ingredients: []
-                    });
-
-                    scrapedProduct.save().then(function (res) {
-                        console.log(res);
-                    }, function (err) {
-                        console.log(err);
-                    });
+        try {
+            console.log(brand.value);
+            let $ = cheerio.load(brand);
+            var brandUrl = $(brand).find('a').first().attr('href');
+            let productsUrl = PRODUCT_BASE_URL + brandUrl + 'products/';
+            const options = {
+                url: productsUrl,
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Accept-Charset': 'utf-8',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
                 }
+            };
+
+            cheerioReq(options, (err, $) => {
+                let brand_id = $('input[name="brand_id"]').attr('value');
+                //this one in order to get all the products of the brand;
+                options.url = BRAND_URL + brand_id + '&&showmore=products&atatime=250';
+                cheerioReq(options, (err, $) => {
+                    let products = $('#table-browse tr');
+                    for (let productIndex = 1; productIndex < products.length; productIndex++) {
+                        let scrapedProduct = new ScrapedProduct({
+                            name: $($(products[productIndex]).find('a')[1]).text(),
+                            product_url: PRODUCT_BASE_URL + $($(products[productIndex]).find('a')[1]).attr('href'),
+                            scraper_strategy: SCRAPER_STRATEGY,
+                            ingredients: []
+                        });
+
+                        scrapedProduct.save().then(function (res) {
+                            console.log(res);
+                        }, function (err) {
+                            console.log(err);
+                        });
+                    }
+                });
             });
-        });
+        }catch (err){
+            console.log('Error with brand - ' + brand);
+        }
     }
 };
