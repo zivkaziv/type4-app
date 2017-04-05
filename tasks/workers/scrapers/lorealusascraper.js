@@ -28,9 +28,8 @@ exports.LorealParisUsaScraper = class LorealParisUsaScraper {
     handleProduct(productToScrape){
         cheerioReq(productToScrape.product_url, (err, $) => {
             productToScrape.ingredients = $('.tab-content-container .ingredients p').text().split('•').map((value)=>value.trim())
-            productToScrape.image_url = SCRAPER_STRATEGY + $('.product-image-container img').attr('src');
+            productToScrape.image_url = BASE_URL + $('.product-image-container img').attr('src');
             productToScrape.number_of_searches = 0;
-            productToScrape.scraper_strategy = SCRAPER_STRATEGY;
             productToScrape.scraped_time = new Date();
             productToScrape.scrape_result = 'FOUND';
 
@@ -50,22 +49,27 @@ exports.LorealParisUsaScraper = class LorealParisUsaScraper {
         console.log('Scrape category - ' + url);
         cheerioReq(url, (err, $) => {
             var products = $('.subcat-product-box');
-            for(let productIndex = 0; products.length; productIndex++) {
-                let product = $(products[productIndex]);
-                var productName = 'Loreal ' +  product.find('.data-brand').text().trim()  + ' ' +product.find('.data-product-name').text().trim();
-                let scrapeProduct = new ScrapedProduct({
-                    product_url: BASE_URL + product.find('a')[1].attribs.href,
-                    scraper_strategy: SCRAPER_STRATEGY,
-                    name: productName,
-                    ingredients: [],
-                    category: categoryName
-                });
+            for(let productIndex = 0; productIndex < products.length; productIndex++) {
+                try {
+                    let product = $(products[productIndex]);
+                    var productName = product.find('.data-product-name').text().trim();
 
-                scrapeProduct.save().then(function(res){
-                    console.log(res);
-                },function(err){
+                    let scrapeProduct = new ScrapedProduct({
+                        product_url: BASE_URL + product.find('a')[1].attribs.href,
+                        scraper_strategy: SCRAPER_STRATEGY,
+                        name: productName,
+                        ingredients: [],
+                        category: categoryName
+                    });
+
+                    scrapeProduct.save().then(function (res) {
+                        console.log(res);
+                    }, function (err) {
+                        console.log(err);
+                    });
+                }catch (err){
                     console.log(err);
-                });
+                }
             }
 
         });

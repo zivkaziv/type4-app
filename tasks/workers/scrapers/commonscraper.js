@@ -10,6 +10,7 @@ var whatsInProductScraperObject  = require('./whatsinproductsscraper');
 var smartLabelScraperObject  = require('./smartlabelscraper');
 var houseHoldDBScraperObject  = require('./householddbscraper');
 var skinDeepScraperObject  = require('./skindeepscraper');
+var lorealUsaScraperObject  = require('./lorealusascraper');
 
 exports.CommonScraper = class CommonScraper {
     constructor() {
@@ -21,6 +22,7 @@ exports.CommonScraper = class CommonScraper {
         var smartLabelScraper = new smartLabelScraperObject.SmartLabelScraper();
         var houseHoldDBScraper = new houseHoldDBScraperObject.HouseHoldDBScraper();
         var skinDeepScraper = new skinDeepScraperObject.SkinDeepScraper();
+        var lorealUsaScraper = new lorealUsaScraperObject.LorealParisUsaScraper();
 
         return setInterval(function() {
             ScrapedProduct.count({"ingredients": {$size: 0}}).exec(function(err, count) {
@@ -45,6 +47,9 @@ exports.CommonScraper = class CommonScraper {
                                 break;
                             case skinDeepScraper.getScrapeStrategy():
                                 skinDeepScraper.handleProduct(productToScrape);
+                                break;
+                            case lorealUsaScraper.getScrapeStrategy():
+                                lorealUsaScraper.handleProduct(productToScrape);
                                 break;
                             default:
                                 console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
