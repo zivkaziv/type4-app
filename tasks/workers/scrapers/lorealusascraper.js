@@ -27,7 +27,7 @@ exports.LorealParisUsaScraper = class LorealParisUsaScraper {
 
     handleProduct(productToScrape){
         cheerioReq(productToScrape.product_url, (err, $) => {
-            productToScrape.ingredients = $('.tab-content-container .ingredients p').text().split('•').map((value)=>value.trim())
+            productToScrape.ingredients = $('.tab-content-container .ingredients p').text().split('•').map((value)=>value.trim());
             productToScrape.image_url = BASE_URL + $('.product-image-container img').attr('src');
             productToScrape.number_of_searches = 0;
             productToScrape.scraped_time = new Date();

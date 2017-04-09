@@ -30,75 +30,79 @@ exports.scrape = function(barcodeId){
             }
 
             if(product.amazon_id) {
-                //Scan amazon in order to find the ingredients and the rest of the details
-                console.log(AMAZON_PRODUCT_URL + product.amazon_id);
-                req = request.defaults({
-                    jar: true,                 // save cookies to jar
-                    rejectUnauthorized: false,
-                    followAllRedirects: true   // allow redirections
-                });
-
-                const options = {
-                    url: AMAZON_PRODUCT_URL + product.amazon_id,
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Accept-Charset': 'utf-8',
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
-                    }
-                };
-
-                // request(AMAZON_PRODUCT_URL + product.amazon_id, function (error, response, html) {
-                request(options, function (error, response, html) {
-                    try {
-                        let $ = cheerio.load(html);
-                        if($('img').attr('src').indexOf('Captcha') > -1){
-                            console.log('Captcha was requested for barcode ID - ' + barcodeId + ' - AmazonId - ' + product.amazon_id );
-                        }
-                        product.name = $('#productTitle').text().trim();
-                        product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
-                        product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
-                        product.scrape_result = 'FOUND';
-                        product.scraper_strategy = 'amazon-us';
-                        product.scraped_time = new Date();
-                        let timeOfIngredients = false;
-                        $('#importantInformation .content').contents().each(function () {
-                            if (timeOfIngredients) {
-                                product.ingredients = $(this).text().replace(/^\s+|\s+$/g, "").split(/\s*,\s*/);
-                                timeOfIngredients = false;
-                            }
-                            if ($(this).text() === "Ingredients") {
-                                timeOfIngredients = true;
-                            }
-
-                        });
-                        if(product.name !== '') {
-                            // if(product.ingredients.length == 0){
-                            //     unfoundProduct.barcode_id = product.barcode_id;
-                            //     unfoundProduct.amazon_id = product.amazon_id;
-                            //     unfoundProduct.name = product.name;
-                            //     unfoundProduct.scrape_result = 'NO_INGREDIENTS';
-                            //     reject(unfoundProduct);
-                            // }
-                            resolve(product);
-                        }else{
-                            unfoundProduct.barcode_id = product.barcode_id;
-                            unfoundProduct.amazon_id = product.amazon_id;
-                            unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_AMAZON';
-                            reject(unfoundProduct);
-                        }
-                    }catch (err){
-                        unfoundProduct.barcode_id = product.barcode_id;
-                        unfoundProduct.scrape_result = 'NOT_FOUND_ERROR';
-                        unfoundProduct.error = err;
-                        reject(unfoundProduct);
-                    }
-                });
+                this.extractFromAmazon(product, barcodeId, resolve, unfoundProduct, reject);
             }else{
                 unfoundProduct.barcode_id = product.barcode_id;
                 unfoundProduct.scrape_result = 'NOT_FOUND_AMAZON_ID';
                 reject(unfoundProduct);
             }
         });
+    });
+};
+
+exports.extractFromAmazon = function(product, barcodeId, resolve, unfoundProduct, reject){
+    //Scan amazon in order to find the ingredients and the rest of the details
+    console.log(AMAZON_PRODUCT_URL + product.amazon_id);
+    req = request.defaults({
+        jar: true,                 // save cookies to jar
+        rejectUnauthorized: false,
+        followAllRedirects: true   // allow redirections
+    });
+
+    const options = {
+        url: AMAZON_PRODUCT_URL + product.amazon_id,
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Accept-Charset': 'utf-8',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
+        }
+    };
+
+    // request(AMAZON_PRODUCT_URL + product.amazon_id, function (error, response, html) {
+    request(options, function (error, response, html) {
+        try {
+            let $ = cheerio.load(html);
+            if ($('img').attr('src').indexOf('Captcha') > -1) {
+                console.log('Captcha was requested for barcode ID - ' + barcodeId + ' - AmazonId - ' + product.amazon_id);
+            }
+            product.name = $('#productTitle').text().trim();
+            product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
+            product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
+            product.scrape_result = 'FOUND';
+            product.scraper_strategy = 'amazon-us';
+            product.scraped_time = new Date();
+            let timeOfIngredients = false;
+            $('#importantInformation .content').contents().each(function () {
+                if (timeOfIngredients) {
+                    product.ingredients = $(this).text().replace(/^\s+|\s+$/g, "").split(/\s*,\s*/);
+                    timeOfIngredients = false;
+                }
+                if ($(this).text() === "Ingredients") {
+                    timeOfIngredients = true;
+                }
+
+            });
+            if (product.name !== '') {
+                // if(product.ingredients.length == 0){
+                //     unfoundProduct.barcode_id = product.barcode_id;
+                //     unfoundProduct.amazon_id = product.amazon_id;
+                //     unfoundProduct.name = product.name;
+                //     unfoundProduct.scrape_result = 'NO_INGREDIENTS';
+                //     reject(unfoundProduct);
+                // }
+                resolve(product);
+            } else {
+                unfoundProduct.barcode_id = product.barcode_id;
+                unfoundProduct.amazon_id = product.amazon_id;
+                unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_AMAZON';
+                reject(unfoundProduct);
+            }
+        } catch (err) {
+            unfoundProduct.barcode_id = product.barcode_id;
+            unfoundProduct.scrape_result = 'NOT_FOUND_ERROR';
+            unfoundProduct.error = err;
+            reject(unfoundProduct);
+        }
     });
 };
