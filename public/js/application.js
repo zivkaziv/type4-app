@@ -37,6 +37,10 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
         controller: 'ResetCtrl',
         resolve: { skipIfAuthenticated: skipIfAuthenticated }
       })
+      .when('/product-editor', {
+          templateUrl: 'partials/product-editor.html',
+          controller: 'ProductEditorCtrl',
+      })
       .otherwise({
         templateUrl: 'partials/404.html'
       });
@@ -149,6 +153,23 @@ angular.module('MyApp')
         });
     };
   }]);
+angular.module('MyApp')
+    .controller('ProductEditorCtrl', ["$scope", "$location", "$window", "$auth", function($scope, $location, $window, $auth) {
+        $scope.isActive = function (viewLocation) {
+            return viewLocation === $location.path();
+        };
+
+        $scope.isAuthenticated = function() {
+            return $auth.isAuthenticated();
+        };
+
+        $scope.logout = function() {
+            $auth.logout();
+            delete $window.localStorage.user;
+            $location.path('/');
+        };
+    }]);
+
 angular.module('MyApp')
   .controller('ProfileCtrl', ["$scope", "$rootScope", "$location", "$window", "$auth", "Account", function($scope, $rootScope, $location, $window, $auth, Account) {
     $scope.profile = $rootScope.currentUser;
@@ -307,3 +328,14 @@ angular.module('MyApp')
       }
     };
   }]);
+angular.module('MyApp')
+    .factory('Product', ["$http", function($http) {
+        return {
+            get: function(query){
+                return $http.get('/product?q='+query, data);
+            },
+            update: function(product) {
+                return $http.post('/product', data);
+            }
+        };
+    }]);

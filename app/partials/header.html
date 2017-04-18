@@ -5,6 +5,7 @@
   </ul>
   <ul ng-if="isAuthenticated()" class="list-inline">
     <li><a href="/account" ng-class="{ active: isActive('/account')}">My Account</a></li>
+    <li><a href="/product-editor" ng-class="{ active: isActive('/product-editor')}">Product Editor</a></li>
     <li><a href="#" ng-click="logout()">Logout</a></li>
   </ul>
   <ul ng-if="!isAuthenticated()" class="list-inline">

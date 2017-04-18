@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/assets',express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
   req.isAuthenticated = function() {
@@ -69,6 +69,8 @@ app.put('/account', userController.ensureAuthenticated, userController.accountPu
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/product/:pId',productController.productGet);
+app.get('/product',productController.productByQueryGet);
+app.post('/product',productController.productPost);
 app.get('/component',componentController.componentGet);
 
 

@@ -1,6 +1,8 @@
 var ProductProvider = require('../business/logic/productprovider');
 var jwt = require('jsonwebtoken');
 var User = require('../models/User');
+var Product = require('../models/Product');
+var ScrapedProduct = require('../models/Scrapedprodcut');
 
 /**
  * GET product/:pId
@@ -32,6 +34,67 @@ exports.productGet = function(req, res) {
             console.error(err);
             res.send(err);
         });
+};
+
+/**
+ * GET product?q=xzcfszx&db=product/scrape
+ */
+exports.productByQueryGet = function(req, res) {
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+    let parameter  =req.query.q;
+    if(userId) {
+        let DbName = ScrapedProduct;
+        if(req.query.db && req.query.db.indexOf('scrpae') === -1){
+            DbName = Product;
+        }
+        DbName.find({
+            $or:
+                [
+                    {barcode_id:{$regex :  new RegExp(".*" + parameter+ "*","i")}},
+                    {name:{$regex :  new RegExp(".*" + parameter + "*","i")}}
+                ]
+        },function(err,products){
+            if(err){
+                res.send(err);
+            }
+            res.send(products);
+        });
+    }else{
+        res.send('TOKEN');
+    }
+};
+
+exports.productPost = function(req, res) {
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+
+    if(userId) {
+        let dbName = Product;
+        if(req.product.scraper_strategy){
+            dbName = ScrapedProduct;
+        }
+        dbName.findById(req.product.id, function(err, product) {
+
+            product.save(function (err) {
+                if (err) {
+                    res.error(err);
+                } else {
+                    res.send('SAVED');
+                }
+            });
+        });
+    }else{
+        res.send('TOKEN');
+    }
 };
 
 function markProblematicIngredients(user,product){
