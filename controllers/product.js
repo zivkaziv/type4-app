@@ -49,7 +49,7 @@ exports.productByQueryGet = function(req, res) {
     let parameter  =req.query.q;
     if(userId) {
         let DbName = ScrapedProduct;
-        if(req.query.db && req.query.db.indexOf('scrpae') === -1){
+        if(req.query.db && req.query.db.indexOf('scrape') === -1){
             DbName = Product;
         }
         DbName.find({

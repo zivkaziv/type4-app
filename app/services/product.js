@@ -1,8 +1,9 @@
 angular.module('MyApp')
-    .factory('Product', function($http) {
+    .factory('ProductsService', function($http) {
         return {
-            get: function(query){
-                return $http.get('/product?q='+query, data);
+            get: function(criteria){
+                var dbName = '&db=' +criteria.db ;
+                return $http.get('/product?q='+criteria.searchText + dbName);
             },
             update: function(product) {
                 return $http.post('/product', data);

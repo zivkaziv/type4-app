@@ -1,3 +1,44 @@
 <div ng-controller="ProductEditorCtrl" class="container">
-   Product editor
+   <div>
+      <!--Header area-->
+      <div>
+         <h2>Product Editor - V1</h2>
+      </div>
+
+      <div style="display: flex">
+         <div style="display: flex;flex-direction: column; max-width: 50%;min-width: 40%">
+            <md-input-container class="md-block" flex-gt-sm>
+               <md-input-container>
+                  <label>Search</label>
+                  <input ng-model="searchCriteria.searchText" ng-keydown="$event.which === 13 && search()" style="color:black;">
+               </md-input-container>
+               <md-button ng-click="search()" class="md-raised md-primary">Search</md-button>
+            </md-input-container>
+            <md-radio-group ng-model="searchCriteria.db">
+               <md-radio-button value="scrapeproducts" class="md-primary">Scraped</md-radio-button>
+               <md-radio-button value="products"> Products </md-radio-button>
+            </md-radio-group>
+
+            <div style="border-top: 1px solid gray;">
+               <md-list flex>
+                  <md-subheader class="md-no-sticky">Products</md-subheader>
+
+                  <md-list-item class="md-3-line" ng-repeat="item in products" ng-click="selectedItem(item)">
+                     <img ng-src="{{item.image_url}}?{{$index}}" class="md-avatar" alt="{{item.name}}" />
+                     <div class="md-list-item-text" layout="column">
+                        <h3>{{ item.name }}</h3>
+                        <h4> <a href="{{ item.product_url }}">Link to product<a/></h4>
+                        <p>{{ item.scraper_strategy }}</p>
+                     </div>
+                  </md-list-item>
+
+               </md-list>
+            </div>
+         </div>
+
+         <div>
+            {{selected | json}}
+         </div>
+      </div>
+   </div>
 </div>

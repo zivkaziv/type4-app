@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngRoute', 'satellizer'])
+angular.module('MyApp', ['ngRoute', 'satellizer','ngMaterial'])
   .config(["$routeProvider", "$locationProvider", "$authProvider", function($routeProvider, $locationProvider, $authProvider) {
     skipIfAuthenticated.$inject = ["$location", "$auth"];
     loginRequired.$inject = ["$location", "$auth"];
@@ -154,20 +154,33 @@ angular.module('MyApp')
     };
   }]);
 angular.module('MyApp')
-    .controller('ProductEditorCtrl', ["$scope", "$location", "$window", "$auth", function($scope, $location, $window, $auth) {
+    .controller('ProductEditorCtrl', ["$scope", "$location", "$window", "$auth", "ProductsService", function($scope, $location, $window, $auth,ProductsService) {
+        $scope.products = [];
+        $scope.selected = {};
+
+        $scope.searchCriteria = {
+            searchText: '',
+            db:'scrapeproducts'
+        };
+
+        $scope.search = function(){
+            ProductsService.get($scope.searchCriteria).then(function(response){
+                if(response) {
+                    $scope.products = response.data;
+                }
+            });
+        };
+
         $scope.isActive = function (viewLocation) {
             return viewLocation === $location.path();
         };
 
-        $scope.isAuthenticated = function() {
-            return $auth.isAuthenticated();
+        $scope.selectedItem = function(item){
+            console.log(item);
+            $scope.selected = item;
         };
 
-        $scope.logout = function() {
-            $auth.logout();
-            delete $window.localStorage.user;
-            $location.path('/');
-        };
+        $scope.search();
     }]);
 
 angular.module('MyApp')
@@ -329,10 +342,11 @@ angular.module('MyApp')
     };
   }]);
 angular.module('MyApp')
-    .factory('Product', ["$http", function($http) {
+    .factory('ProductsService', ["$http", function($http) {
         return {
-            get: function(query){
-                return $http.get('/product?q='+query, data);
+            get: function(criteria){
+                var dbName = '&db=' +criteria.db ;
+                return $http.get('/product?q='+criteria.searchText + dbName);
             },
             update: function(product) {
                 return $http.post('/product', data);
