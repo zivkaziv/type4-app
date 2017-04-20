@@ -48,6 +48,7 @@ exports.scrape = function(barcodeId){
             //     We need to get it from another site
             // }
 
+
             if(!product.name || product.name === '') {
                 unfoundProduct.barcode_id = product.barcode_id;
                 unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_DIGIT_EYES_DB';
