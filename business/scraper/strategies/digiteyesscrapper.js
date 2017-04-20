@@ -13,6 +13,7 @@ exports.scrape = function(barcodeId){
         let product = new Product();
         let unfoundProduct = new UnfoundProduct();
         product.barcode_id = barcodeId;
+        product.amazon_id = barcodeId;
         console.log(DIGITAL_EYES_URL + barcodeId);
         try {
             var url = DIGITAL_EYES_URL + createSigniture(AUTH_KEY, barcodeId) + '&upcCode=' + barcodeId;
