@@ -9,7 +9,7 @@ var schemaOptions = {
 
 var productSchema = new mongoose.Schema({
     barcode_id: { type: String, unique: true},
-    amazon_id: { type: String, unique: true},
+    amazon_id: String,
     name: String,
     category: String,
     image_url: String,
