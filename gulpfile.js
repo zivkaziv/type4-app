@@ -16,9 +16,10 @@ gulp.task('angular', function() {
     'app/controllers/*.js',
     'app/services/*.js'
   ])
-    .pipe(concat('application.js'))
+    .pipe(concat('applicati' +
+        'on.js'))
     .pipe(ngAnnotate())
-    .pipe(gulpif(argv.production, uglify()))
+    // .pipe(gulpif(argv.production, uglify()))
     .pipe(gulp.dest('public/js'));
 });
 

@@ -212,7 +212,6 @@ angular.module('MyApp')
         };
     }]);
 
-
 angular.module('MyApp')
   .controller('ProfileCtrl', ["$scope", "$rootScope", "$location", "$window", "$auth", "Account", function($scope, $rootScope, $location, $window, $auth, Account) {
     $scope.profile = $rootScope.currentUser;
