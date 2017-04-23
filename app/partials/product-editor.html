@@ -6,7 +6,7 @@
       </div>
 
       <div style="display: flex">
-         <div style="display: flex;flex-direction: column; max-width: 50%;min-width: 40%">
+         <div style="display: flex;flex-direction: column; max-width: 30%;min-width: 30%">
             <md-input-container class="md-block" flex-gt-sm>
                <md-input-container>
                   <label>Search</label>
@@ -14,12 +14,13 @@
                </md-input-container>
                <md-button ng-click="search()" class="md-raised md-primary">Search</md-button>
             </md-input-container>
-            <md-radio-group ng-model="searchCriteria.db">
+            <md-radio-group ng-model="searchCriteria.db" style="display: flex;justify-content: space-around;">
                <md-radio-button value="scrapeproducts" class="md-primary">Scraped</md-radio-button>
                <md-radio-button value="products"> Products </md-radio-button>
             </md-radio-group>
 
-            <div style="border-top: 1px solid gray;">
+            <div ng-show="isLoading" style="margin-top: 20px">Loading... Wait....</div>
+            <div ng-show="!isLoading" style="border-top: 1px solid gray;">
                <md-list flex>
                   <md-subheader class="md-no-sticky">Products</md-subheader>
 
@@ -36,8 +37,52 @@
             </div>
          </div>
 
-         <div>
-            {{selected | json}}
+         <div class="edit-product" ng-show="selected.id" style="display: flex;margin-right: 10px">
+            <div style="display: flex;flex-direction: column">
+               <img ng-src="{{selected.image_url}}" style="max-height: 150px;max-width: 150px;margin-bottom:30px">
+               <md-input-container>
+                  <label>Image Url</label>
+                  <input ng-model="selected.image_url" style="color:black;">
+               </md-input-container>
+
+
+            </div>
+            <div style="display: flex;flex-direction: column;">
+               <md-input-container>
+                  <label>Barcode</label>
+                  <input ng-model="selected.barcode_id" style="color:black;">
+               </md-input-container>
+               <md-input-container>
+                  <label>Amazon id</label>
+                  <input ng-model="selected.amazon_id" style="color:black;">
+               </md-input-container>
+               <md-input-container>
+                  <label>Category</label>
+                  <input ng-model="selected.category" style="color:black;">
+               </md-input-container>
+               <md-input-container>
+                  <label>Product URL</label>
+                  <input ng-model="selected.product_url" style="color:black;">
+               </md-input-container>
+               <textarea
+                       ng-model="selected.ingredients_raw"
+                       name="Ingredients"
+                       ng-trim="true">
+               </textarea>
+
+               <div style="font-weight: bold; margin-top:40px">
+                  <div ng-show="selected.num_of_searches">{{selected.num_of_searches}}</div>
+                  <div ng-show="selected.scraped_time">{{selected.scraped_time | date}}</div>
+                  <div ng-show="selected.scraper_strategy">{{selected.scraper_strategy}}</div>
+                  <div ng-show="selected.scraper_results">{{selected.scraper_results}}</div>
+               </div>
+               <div style="display: flex; margin-top: 20px">
+                  <md-button ng-show="!isSaved" ng-click="save()" class="md-raised md-primary">Save</md-button>
+                  <md-button ng-show="isSaved"  ng-click="save()" class="md-raised md-primary">Saved</md-button>
+                  <md-button ng-click="undo()" class="md-raised md-warning">Undo</md-button>
+               </div>
+            </div>
+            <!--{{selected | json}}-->
          </div>
       </div>
    </div>

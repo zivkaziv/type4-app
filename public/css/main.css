@@ -77,3 +77,8 @@ form button[type="submit"] {
   height: 30px;
   vertical-align: middle;
 }
+
+
+.edit-product md-input-container{
+  margin: 0 5px;
+}

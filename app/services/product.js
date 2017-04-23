@@ -6,7 +6,7 @@ angular.module('MyApp')
                 return $http.get('/product?q='+criteria.searchText + dbName);
             },
             update: function(product) {
-                return $http.post('/product', data);
+                return $http.post('/product', product);
             }
         };
     });

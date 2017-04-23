@@ -52,18 +52,21 @@ exports.productByQueryGet = function(req, res) {
         if(req.query.db && req.query.db.indexOf('scrape') === -1){
             DbName = Product;
         }
-        DbName.find({
-            $or:
-                [
-                    {barcode_id:{$regex :  new RegExp(".*" + parameter+ "*","i")}},
-                    {name:{$regex :  new RegExp(".*" + parameter + "*","i")}}
+        if(parameter) {
+            DbName.find({
+                $or: [
+                    {barcode_id: {$regex: new RegExp(".*" + parameter + "*", "i")}},
+                    {name: {$regex: new RegExp(".*" + parameter + "*", "i")}}
                 ]
-        },function(err,products){
-            if(err){
-                res.send(err);
-            }
-            res.send(products);
-        });
+            }, function (err, products) {
+                if (err) {
+                    res.send(err);
+                }
+                res.send(products);
+            });
+        }else{
+            res.send([]);
+        }
     }else{
         res.send('TOKEN');
     }
@@ -79,11 +82,18 @@ exports.productPost = function(req, res) {
 
     if(userId) {
         let dbName = Product;
-        if(req.product.scraper_strategy){
+        if(req.body.scraper_strategy){
             dbName = ScrapedProduct;
         }
-        dbName.findById(req.product.id, function(err, product) {
-
+        let productToSave = req.body;
+        dbName.findById(req.body.id, (err, product) => {
+            product.ingredients = productToSave.ingredients;
+            product.name = productToSave.name;
+            product.image_url = productToSave.image_url;
+            product.barcode_id = productToSave.barcode_id;
+            product.amazon_id = productToSave.amazon_id;
+            product.category = productToSave.category;
+            product.product_url = productToSave.product_url;
             product.save(function (err) {
                 if (err) {
                     res.error(err);
