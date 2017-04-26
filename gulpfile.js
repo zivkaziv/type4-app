@@ -8,6 +8,7 @@ var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var plumber = require('gulp-plumber');
+var pump = require('pump');
 
 
 gulp.task('angular', function() {
@@ -16,11 +17,20 @@ gulp.task('angular', function() {
     'app/controllers/*.js',
     'app/services/*.js'
   ])
-    .pipe(concat('applicati' +
-        'on.js'))
+    .pipe(concat('application.js'))
     .pipe(ngAnnotate())
     // .pipe(gulpif(argv.production, uglify()))
     .pipe(gulp.dest('public/js'));
+});
+
+gulp.task('compress', function (cb) {
+    pump([
+            gulp.src('public/*.js'),
+            gulpif(argv.production,uglify()),
+            gulp.dest('public/js')
+        ],
+        cb
+    );
 });
 
 gulp.task('templates', function() {
@@ -41,5 +51,5 @@ gulp.task('watch', function() {
   gulp.watch('app/**/*.js', ['angular']);
 });
 
-gulp.task('build', ['angular', 'vendor', 'templates']);
+gulp.task('build', ['angular','compress', 'vendor', 'templates']);
 gulp.task('default', ['build', 'watch']);

@@ -81,6 +81,7 @@ app.post('/householddb',scrapingController.houseHoldDBScrapePost);
 app.post('/skindeep',scrapingController.skinDeepScrapePost);
 app.post('/lorealusa',scrapingController.lorealParisUsaScrapePost);
 app.post('/png',scrapingController.pnGScrapePost);
+app.post('/goodguide',scrapingController.goodGuideScrapePost);
 
 app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
 app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);

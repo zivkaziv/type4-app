@@ -56,8 +56,12 @@ exports.SmartLabelScraper = class SmartLabelScraper {
         }
         console.log(url);
         cheerioReq(url, (err, $) => {
+            if(err){
+                console.log(err);
+                return;
+            }
             //in case it's not angular
-            if($.html().indexOf('ui-view') === -1) {
+            if($ && $.html && $.html().indexOf('ui-view') === -1) {
                 if(productToScrape.product_url.indexOf('servlet.') !== -1){
                     this.extractProductFromHTML($,productToScrape);
                 }

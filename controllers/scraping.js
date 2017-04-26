@@ -9,6 +9,7 @@ var houseHoldDBObject = require('../tasks/workers/scrapers/householddbscraper');
 var skinDeepObject = require('../tasks/workers/scrapers/skindeepscraper');
 var lorealParisUsaObject = require('../tasks/workers/scrapers/lorealusascraper');
 var PnGMainObject = require('../tasks/workers/scrapers/PnG/pngmainscraper');
+var goodGuideObject = require('../tasks/workers/scrapers/goodguidescraper');
 var commonScraper = require('../tasks/workers/scrapers/commonscraper');
 
 var scrapeInterval;
@@ -51,6 +52,12 @@ exports.lorealParisUsaScrapePost = function(req, res) {
 
 exports.pnGScrapePost = function(req, res) {
     var scraper = new PnGMainObject.PnGMainScraper();
+    scraper.addProductsToQueue();
+    res.status(200).send({ msg: 'started' });
+};
+
+exports.goodGuideScrapePost = function(req, res) {
+    var scraper = new goodGuideObject.GoodGuideScraper();
     scraper.addProductsToQueue();
     res.status(200).send({ msg: 'started' });
 };

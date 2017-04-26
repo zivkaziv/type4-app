@@ -12,6 +12,7 @@ var houseHoldDBScraperObject  = require('./householddbscraper');
 var skinDeepScraperObject  = require('./skindeepscraper');
 var lorealUsaScraperObject  = require('./lorealusascraper');
 var pngMainScraperObject  = require('./PnG/pngmainscraper');
+var goodGuideScraperObject  = require('./goodguidescraper');
 
 exports.CommonScraper = class CommonScraper {
     constructor() {
@@ -25,6 +26,7 @@ exports.CommonScraper = class CommonScraper {
         var skinDeepScraper = new skinDeepScraperObject.SkinDeepScraper();
         var lorealUsaScraper = new lorealUsaScraperObject.LorealParisUsaScraper();
         var pngMainScraper = new pngMainScraperObject.PnGMainScraper();
+        var goodGuideScraper = new goodGuideScraperObject.GoodGuideScraper();
 
         return setInterval(function() {
             ScrapedProduct.count({"ingredients": {$size: 0}}).exec(function(err, count) {
@@ -47,6 +49,8 @@ exports.CommonScraper = class CommonScraper {
                                     skinDeepScraper.handleProduct(productToScrape);
                                 }else if (productToScrape.scraper_strategy === lorealUsaScraper.getScrapeStrategy()) {
                                     lorealUsaScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === goodGuideScraper.getScrapeStrategy()) {
+                                    goodGuideScraper.handleProduct(productToScrape);
                                 }
 
                                 //Those brands are house of brands, therefore we have one scarper and there
