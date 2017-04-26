@@ -6,8 +6,8 @@ var ScrapedProduct = require('../../../models/Scrapedprodcut');
 const cheerioReq = require("cheerio-req");
 
 const PRODUCTS_URL = 'https://www.goodguide.com/products/directory/{letter}?page={pageNumber}';
-const letters = ['0-9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-// const letters = ['0-9','z'];//for debug
+// const letters = ['0-9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+const letters = ['0-9'];//for debug
 const PRODUCT_BASE_URL = 'https://www.goodguide.com';
 const SCRAPER_STRATEGY = 'goodguide.com';
 
@@ -81,7 +81,7 @@ exports.GoodGuideScraper = class GoodGuideScraper {
         console.log('URL: ' + url);
         cheerioReq(options,(err, $) => {
             //in case it's not the end, call recursively
-            if($('.next .last').length > 0){
+            if($('.next').length == 0 || $('.next .last').length > 0){
                this.handleProducts($);
                console.log('URL: ' + url + ' last page ' + pageNumber);
                return;
