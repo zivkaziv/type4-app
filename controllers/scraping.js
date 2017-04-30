@@ -74,7 +74,13 @@ exports.ScrapeProductsStartPost = function(req, res) {
     }
 };
 exports.ScrapeProductsStartGet = function(req, res) {
-    this.ScrapeProductsStartPost(req,res);
+    if(!scrapeInterval){
+        var scraper = new commonScraper.CommonScraper();
+        scrapeInterval = scraper.scrapeProductsFromQueue();
+        res.status(200).send({ msg: 'started' });
+    }else{
+        res.status(200).send({ msg: 'running' });
+    }
 };
 
 exports.ScrapeProductsStopPost = function(req, res) {
