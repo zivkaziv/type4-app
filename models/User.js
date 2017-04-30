@@ -23,6 +23,8 @@ var userSchema = new mongoose.Schema({
   twitter: String,
   google: String,
   github: String,
+  ionic_id: String,
+  push_token: String,
   vk: String,
   allergies: [{}],
   searches: [{}],

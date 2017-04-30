@@ -146,6 +146,8 @@ exports.accountPut = function(req, res, next) {
       user.website = req.body.website;
       user.allergies = req.body.allergies;
       user.searches = req.body.searches;
+      user.ionic_id = req.body.ionic_id;
+      user.push_token = req.body.push_token;
     }
     user.save(function(err) {
       if ('password' in req.body) {
