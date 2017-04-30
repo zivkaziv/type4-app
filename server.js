@@ -84,6 +84,7 @@ app.post('/png',scrapingController.pnGScrapePost);
 app.post('/goodguide',scrapingController.goodGuideScrapePost);
 
 app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
+app.get('/scrapingmonitor',scrapingController.ScrapeProductsStartGet);
 app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);
 
 

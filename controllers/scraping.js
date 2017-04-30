@@ -73,6 +73,9 @@ exports.ScrapeProductsStartPost = function(req, res) {
         res.status(200).send({ msg: 'running' });
     }
 };
+exports.ScrapeProductsStartGet = function(req, res) {
+    this.ScrapeProductsStartPost(req,res);
+};
 
 exports.ScrapeProductsStopPost = function(req, res) {
     if(scrapeInterval){
