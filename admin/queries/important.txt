@@ -3,3 +3,6 @@ db.getCollection('scrapedproducts').aggregate([
 		{"$group" : {_id:"$scraper_strategy", count:{$sum:1}}}
 	])
 
+
+Number of products that scraped
+db.getCollection('scrapedproducts').count({ scrape_result: { $exists: true } })

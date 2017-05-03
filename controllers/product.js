@@ -7,7 +7,7 @@ var ScrapedProduct = require('../models/Scrapedprodcut');
 /**
  * GET product/:pId
  */
-exports.productGet = function(req, res) {
+exports.productByIdPost = function(req, res) {
     var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
     var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
     var userId = undefined;
