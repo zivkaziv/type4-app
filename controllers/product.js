@@ -7,7 +7,7 @@ var ScrapedProduct = require('../models/Scrapedprodcut');
 /**
  * GET product/:pId
  */
-exports.productByIdPost = function(req, res) {
+exports.productGet = function(req, res) {
     var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
     var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
     var userId = undefined;
@@ -15,6 +15,39 @@ exports.productByIdPost = function(req, res) {
         userId = tokenParams.sub;
     }
 
+    ProductProvider.getProduct(req.params.pId)
+        .then(function(product){
+            if(userId){
+                console.log('the user id is ' + userId);
+                User.findById(userId , function(err, user) {
+                    if(user){
+                        markProblematicIngredients(user,product);
+                        saveUserSearch(user,product);
+                    }
+                    res.send(product);
+                });
+                //mark problematic ingredients
+            }else{
+                res.send(product);
+            }
+        },function(err){
+            console.error(err);
+            res.send(err);
+        });
+};
+
+
+/**
+ * POST product/:pId
+ */
+exports.productByIdPost = function(req, res) {
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+    console.log(req.body);
     ProductProvider.getProduct(req.params.pId)
         .then(function(product){
             if(userId){

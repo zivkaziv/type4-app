@@ -69,7 +69,7 @@ app.put('/account', userController.ensureAuthenticated, userController.accountPu
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.post('/product/:pId',productController.productByIdPost);
-app.get('/product/:pId',productController.productByIdPost);
+app.get('/product/:pId',productController.productGet);
 app.get('/product',productController.productByQueryGet);
 app.post('/product',productController.productPost);
 app.get('/component',componentController.componentGet);
