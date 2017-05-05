@@ -68,7 +68,7 @@ exports.CommonScraper = class CommonScraper {
                         }
                 });
             });
-        }, 10000);
+        }, 5000);
     }
 
 };
