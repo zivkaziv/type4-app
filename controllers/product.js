@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 var Product = require('../models/Product');
 var ScrapedProduct = require('../models/Scrapedprodcut');
+var UserProductSearch= require('../models/UserProductSearch');
 
 /**
  * GET product/:pId
@@ -55,7 +56,7 @@ exports.productByIdPost = function(req, res) {
                 User.findById(userId , function(err, user) {
                     if(user){
                         markProblematicIngredients(user,product);
-                        saveUserSearch(user,product);
+                        saveUserSearch(user,product,req.body.position);
                     }
                     res.send(product);
                 });
@@ -180,7 +181,18 @@ function markProblematicIngredients(user,product){
     }
 }
 
-function saveUserSearch(user,product){
+function saveUserSearch(user,product,location){
     user.searches.push(product);
     user.save();
+
+    try {
+        let userProductSearch = new UserProductSearch();
+        userProductSearch.user = user;
+        userProductSearch.product = product;
+        userProductSearch.location = location;
+        userProductSearch.analysis = product.ingredient_analysis;
+        userProductSearch.save();
+    }catch (err){
+        console.log(err);
+    }
 }
