@@ -6,3 +6,7 @@ db.getCollection('scrapedproducts').aggregate([
 
 Number of products that scraped
 db.getCollection('scrapedproducts').count({ scrape_result: { $exists: true } })
+
+
+Export to CSV scraped products
+mongoexport -h ds117189.mlab.com:17189 -d heroku_kmh0mhqv -c scrapedproducts -u zivziv -p Z15194806k -o scraped.csv --csv -f barcode_id,amazon_id,name,category,image_url,scrape_result,scraped_time,ingredients,product_url,scraper_strategy

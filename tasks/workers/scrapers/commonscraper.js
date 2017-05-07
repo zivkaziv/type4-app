@@ -12,6 +12,7 @@ var houseHoldDBScraperObject  = require('./householddbscraper');
 var skinDeepScraperObject  = require('./skindeepscraper');
 var lorealUsaScraperObject  = require('./lorealusascraper');
 var pngMainScraperObject  = require('./PnG/pngmainscraper');
+var jnjMainScraperObject  = require('./JnJ/jnjmainscraper');
 var goodGuideScraperObject  = require('./goodguidescraper');
 
 exports.CommonScraper = class CommonScraper {
@@ -26,6 +27,7 @@ exports.CommonScraper = class CommonScraper {
         var skinDeepScraper = new skinDeepScraperObject.SkinDeepScraper();
         var lorealUsaScraper = new lorealUsaScraperObject.LorealParisUsaScraper();
         var pngMainScraper = new pngMainScraperObject.PnGMainScraper();
+        var jnjMainScraper = new jnjMainScraperObject.JnJMainScraper();
         var goodGuideScraper = new goodGuideScraperObject.GoodGuideScraper();
 
         return setInterval(function() {
@@ -57,6 +59,8 @@ exports.CommonScraper = class CommonScraper {
                                 //we have the logic relate to the relevant brand
                                 else if (pngMainScraper.isPnGStrategy(productToScrape.scraper_strategy)) {
                                     pngMainScraper.handleProduct(productToScrape);
+                                }else if (jnjMainScraper.isJnJStrategy(productToScrape.scraper_strategy)) {
+                                    jnjMainScraper.handleProduct(productToScrape);
                                 }else{
                                     console.log('Unknown strategy for ' + productToScrape.scraper_strategy);
                                 }
