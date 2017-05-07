@@ -115,26 +115,32 @@ exports.productPost = function(req, res) {
     }
 
     if(userId) {
-        let dbName = Product;
-        if(req.body.scraper_strategy){
-            dbName = ScrapedProduct;
+        let dbName = ScrapedProduct;
+        if(req.body.scraper_strategy === 'digit-eye' ||
+            req.body.scraper_strategy === 'amazon-us' ||
+            req.body.barcode_id){
+            dbName = Product;
         }
         let productToSave = req.body;
         dbName.findById(req.body.id, (err, product) => {
-            product.ingredients = productToSave.ingredients;
-            product.name = productToSave.name;
-            product.image_url = productToSave.image_url;
-            product.barcode_id = productToSave.barcode_id;
-            product.amazon_id = productToSave.amazon_id;
-            product.category = productToSave.category;
-            product.product_url = productToSave.product_url;
-            product.save(function (err) {
-                if (err) {
-                    res.error(err);
-                } else {
-                    res.send('SAVED');
-                }
-            });
+            if(product) {
+                product.ingredients = productToSave.ingredients;
+                product.name = productToSave.name;
+                product.image_url = productToSave.image_url;
+                product.barcode_id = productToSave.barcode_id;
+                product.amazon_id = productToSave.amazon_id;
+                product.category = productToSave.category;
+                product.product_url = productToSave.product_url;
+                product.save(function (err) {
+                    if (err) {
+                        res.error(err);
+                    } else {
+                        res.send('SAVED');
+                    }
+                });
+            }else{
+                res.send('NO_PRODUCT');
+            }
         });
     }else{
         res.send('TOKEN');
