@@ -18,7 +18,9 @@ var productSchema = new mongoose.Schema({
     scraped_time: Date,
     ingredients : [String],
     product_url : String,
-    scraper_strategy : String
+    scraper_strategy : String,
+    reported_date : Date,
+    reported_users : [{}]
 }, schemaOptions);
 
 var Product = mongoose.model('Product', productSchema);

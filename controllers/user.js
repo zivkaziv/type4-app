@@ -162,6 +162,34 @@ exports.accountPut = function(req, res, next) {
 };
 
 /**
+ * PUT /clear/history
+ * Update profile information OR change password.
+ */
+exports.clearHistory = function(req, res, next) {
+    if ('password' in req.body) {
+        req.assert('password', 'Password must be at least 4 characters long').len(4);
+        req.assert('confirm', 'Passwords must match').equals(req.body.password);
+    } else {
+        req.assert('email', 'Email is not valid').isEmail();
+        req.assert('email', 'Email cannot be blank').notEmpty();
+        req.sanitize('email').normalizeEmail({ remove_dots: false });
+    }
+
+    var errors = req.validationErrors();
+
+    if (errors) {
+        return res.status(400).send(errors);
+    }
+
+    User.findById(req.user.id, function(err, user) {
+       user.searches = [];
+        user.save(function(err) {
+            res.send({ user: user, msg: 'Your search history has been deleted.' });
+        });
+    });
+};
+
+/**
  * DELETE /account
  */
 exports.accountDelete = function(req, res, next) {

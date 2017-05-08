@@ -147,6 +147,42 @@ exports.productPost = function(req, res) {
     }
 };
 
+exports.reportProblematicProductPost = function(req, res) {
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+
+    if(userId) {
+        let productToReport =req.body.product;
+        let user =req.body.user;
+
+        Product.findById(productToReport.id, (err, product) => {
+            if(product) {
+                product.reported_date = new Date();
+                if(!product.reported_users){
+                    product.reported_users = [];
+                }
+                user.searches = [];
+                product.reported_users.push(user);
+                product.save(function (err) {
+                    if (err) {
+                        res.error(err);
+                    } else {
+                        res.send('SAVED');
+                    }
+                });
+            }else{
+                res.send('NO_PRODUCT');
+            }
+        });
+    }else{
+        res.send('TOKEN');
+    }
+};
+
 function markProblematicIngredients(user,product){
     if(user && product){
         product.ingredient_analysis = [];
