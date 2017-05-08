@@ -159,7 +159,8 @@ exports.reportProblematicProductPost = function(req, res) {
         let productToReport =req.body.product;
         let user =req.body.user;
 
-        Product.findById(productToReport.id, (err, product) => {
+        console.log(productToReport._id);
+        Product.findById(productToReport._id, (err, product) => {
             if(product) {
                 product.reported_date = new Date();
                 if(!product.reported_users){
