@@ -166,6 +166,11 @@ exports.reportProblematicProductPost = function(req, res) {
                 if(!product.reported_users){
                     product.reported_users = [];
                 }
+                try {
+                    updateUserSearches(user, product);
+                }catch (err){
+                    console.log(err);
+                }
                 user.searches = [];
                 product.reported_users.push(user);
                 product.save(function (err) {
@@ -238,4 +243,18 @@ function saveUserSearch(user,product,location){
     }catch (err){
         console.log(err);
     }
+}
+
+function updateUserSearches(user,product){
+    User.findById(user._id, (err, user) => {
+        if(user) {
+            for (let searchIndex = 0; searchIndex <user.searches.size; searchIndex++){
+                if(user.searches[searchIndex]._id === product._id){
+                    user.searches[searchIndex].reported_users.push({email:user.email});
+                    break;
+                }
+            }
+            user.save();
+        }
+    })
 }
