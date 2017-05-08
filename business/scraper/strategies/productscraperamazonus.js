@@ -90,8 +90,9 @@ exports.extractFromAmazon = function(product, barcodeId, resolve, unfoundProduct
                     unfoundProduct.name = product.name;
                     unfoundProduct.scrape_result = 'NO_INGREDIENTS';
                     reject(unfoundProduct);
+                }else{
+                    resolve(product);
                 }
-                // resolve(product);
             } else {
                 unfoundProduct.barcode_id = product.barcode_id;
                 unfoundProduct.amazon_id = product.amazon_id;
