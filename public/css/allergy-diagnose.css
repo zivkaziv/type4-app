@@ -1,0 +1,44 @@
+#diagnose{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 100%;
+    background: white;
+    width: 100%;
+    z-index: 99;
+    background-color: #1aad53;
+}
+
+#diagnose .diagnose-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+
+    color:white;
+    font-size: 30px;
+    font-weight: bold;
+
+    border-bottom: 1px white solid;
+    margin-bottom: 15px;
+}
+
+#diagnose .diagnose-header .logo{
+    color:white;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#diagnose .diagnose-header .spacer{
+   width: 10px;
+}
+
+#diagnose .select-products-container{
+    width: 40%;
+}
+
+#diagnose .select-products-container .search-product{
+    width: 90%;
+    color:white;
+}
