@@ -62,6 +62,7 @@ angular.module('MyApp')
         $scope.select = function(){
             $scope.addSelectedProduct($scope.selectedItem);
             $scope.selectedItem = {};
+            $scope.searchCriteria.searchText = ' ';
         };
 
         $scope.addSelectedProduct = function(productToAdd){
