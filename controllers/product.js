@@ -87,12 +87,13 @@ exports.productByQueryGet = function(req, res) {
             DbName = Product;
         }
         if(parameter) {
-            DbName.find({
+            var q = DbName.find({
                 $or: [
                     {barcode_id: {$regex: new RegExp(".*" + parameter + "*", "i")}},
                     {name: {$regex: new RegExp(".*" + parameter + "*", "i")}}
                 ]
-            }, function (err, products) {
+            }).sort({'date': -1}).limit(20);
+            q.exec(function(err, products) {
                 if (err) {
                     res.send(err);
                 }

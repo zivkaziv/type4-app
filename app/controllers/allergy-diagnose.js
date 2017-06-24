@@ -46,7 +46,7 @@ angular.module('MyApp')
         };
 
         $scope.search = function(text){
-            if(text === ''){
+            if(text === '' || text.length < 2){
                 return [];
             }
             console.log('searching ' + text);
