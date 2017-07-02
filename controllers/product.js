@@ -203,8 +203,8 @@ exports.reportReactionProductPost = function(req, res) {
         let product =req.body.product;
         let user =req.body.user;
 
-        console.log(product.id);
-        Product.findById(product.id, (err, product) => {
+        console.log(product._id);
+        Product.findById(product._id, (err, product) => {
             if(product) {
                 saveUserProductReaction(user,product);
                 res.send('SAVED');
