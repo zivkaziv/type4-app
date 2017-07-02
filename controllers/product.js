@@ -4,6 +4,7 @@ var User = require('../models/User');
 var Product = require('../models/Product');
 var ScrapedProduct = require('../models/Scrapedprodcut');
 var UserProductSearch= require('../models/UserProductSearch');
+var UserProductReaction= require('../models/UserProductReaction');
 
 /**
  * GET product/:pId
@@ -190,6 +191,32 @@ exports.reportProblematicProductPost = function(req, res) {
     }
 };
 
+exports.reportReactionProductPost = function(req, res) {
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+
+    if(userId) {
+        let productToReport =req.body.product;
+        let user =req.body.user;
+
+        console.log(productToReport._id);
+        Product.findById(productToReport._id, (err, product) => {
+            if(product) {
+                saveUserProductReaction(user,product);
+                res.send('SAVED');
+            }else{
+                res.send('NO_PRODUCT');
+            }
+        });
+    }else{
+        res.send('TOKEN');
+    }
+};
+
 function markProblematicIngredients(user,product){
     if(user && product){
         product.ingredient_analysis = [];
@@ -259,4 +286,19 @@ function updateUserSearches(user,product){
             user.save();
         }
     })
+}
+
+function saveUserProductReaction(user,product){
+    try {
+        let userProductReaction = new UserProductReaction();
+        userProductReaction.user = user;
+        userProductReaction.product = product;
+        userProductReaction.location = location;
+        userProductReaction.analysis = product.ingredient_analysis;
+        userProductReaction.save();
+        user.reactions.push(product);
+        user.save();
+    }catch (err){
+        console.log(err);
+    }
 }
