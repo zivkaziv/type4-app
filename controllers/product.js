@@ -200,8 +200,9 @@ function markProblematicIngredients(user,product){
                     name: product.ingredients[ingredientIndex],
                     analysis: 'UNKNOWN'
                 });
-                product.is_safe = false;
+                product.is_safe = true;
             }
+            product._doc.analysis_result = 'UNKNOWN';
         }else {
             for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
                 let isSensetive = false;
@@ -223,10 +224,10 @@ function markProblematicIngredients(user,product){
                     })
                 }
             }
+            product._doc.analysis_result = product.is_safe? 'SAFE' : 'NOT_SAFE';
         }
 
         product._doc.ingredient_analysis = product.ingredient_analysis;
-        product._doc.analysis_result = product.is_safe? 'SAFE' : 'NOT_SAFE';
     }
 }
 
