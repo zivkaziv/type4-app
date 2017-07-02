@@ -206,7 +206,7 @@ exports.reportReactionProductPost = function(req, res) {
         console.log(product._id);
         Product.findById(product._id, (err, product) => {
             if(product) {
-                saveUserProductReaction(user,product);
+                saveUserProductReaction(user,product,req.body.position);
                 res.send('SAVED');
             }else{
                 res.send('NO_PRODUCT');
@@ -288,12 +288,14 @@ function updateUserSearches(user,product){
     })
 }
 
-function saveUserProductReaction(user,product){
+function saveUserProductReaction(user,product,location){
     try {
         let userProductReaction = new UserProductReaction();
         userProductReaction.user = user;
         userProductReaction.product = product;
-        userProductReaction.location = location;
+        if(location) {
+            userProductReaction.location = location;
+        }
         userProductReaction.analysis = product.ingredient_analysis;
         userProductReaction.save();
         user.reactions.push(product);
