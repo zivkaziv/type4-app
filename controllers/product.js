@@ -298,8 +298,12 @@ function saveUserProductReaction(user,product,location){
         }
         userProductReaction.analysis = product.ingredient_analysis;
         userProductReaction.save();
-        user.reactions.push(product);
-        user.save();
+        console.log('user reactions - saved');
+        User.findById(user.id , function(err, user) {
+            console.log('user - saved');
+            user.reactions.push(product);
+            user.save();
+        });
     }catch (err){
         console.log(err);
     }
