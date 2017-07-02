@@ -200,11 +200,11 @@ exports.reportReactionProductPost = function(req, res) {
     }
 
     if(userId) {
-        let productToReport =req.body.product;
+        let product =req.body.product;
         let user =req.body.user;
 
-        console.log(productToReport._id);
-        Product.findById(productToReport._id, (err, product) => {
+        console.log(product.id);
+        Product.findById(product.id, (err, product) => {
             if(product) {
                 saveUserProductReaction(user,product);
                 res.send('SAVED');
