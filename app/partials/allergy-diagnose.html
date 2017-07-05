@@ -53,25 +53,25 @@
                 <div>{{selectedItem.name}}</div>
             </div>
 
-            <select name="singleSelect" ng-model="selectedItem.personal_effect">
-                <option value="RASH">Rash</option>
-                <option value="PIMPLES">Pimples</option>
-            </select>
+            <!--<select name="singleSelect" ng-model="selectedItem.personal_effect">-->
+                <!--<option value="RASH">Rash</option>-->
+                <!--<option value="PIMPLES">Pimples</option>-->
+            <!--</select>-->
 
-            <!--<div>-->
-                <!--<md-input-container flex="50" style="z-index: 9999">-->
-                    <!--<label>Favorite Color</label>-->
-                    <!--<md-select name="favoriteColor" ng-model="selectedItem.favoriteColor">-->
-                        <!--<md-option value="RASH">Rash</md-option>-->
-                        <!--<md-option value="PIMPLES">Pimples</md-option>-->
-                        <!--<md-option value="green">Green</md-option>-->
-                    <!--</md-select>-->
-                    <!--<div class="errors">-->
-                        <!--<div ng-message="required">Required</div>-->
-                    <!--</div>-->
-                <!--</md-input-container>-->
-            <!--</div>-->
-            <md-button class="md-raised" ng-click="select()">Add</md-button>
+            <div  style=" position: relative">
+                <md-input-container flex="50" style=" position: relative">
+                    <label>Favorite Color</label>
+                    <md-select name="favoriteColor" ng-model="selectedItem.favoriteColor">
+                        <md-option value="RASH">Rash</md-option>
+                        <md-option value="PIMPLES">Pimples</md-option>
+                        <md-option value="green">Green</md-option>
+                    </md-select>
+                    <div class="errors">
+                        <div ng-message="required">Required</div>
+                    </div>
+                </md-input-container>
+            </div>
+            <md-button class="md-raised" ng-click="select()" style="margin-top: 30px">Add</md-button>
         </div>
 
         <div class="found-allergies-container">

@@ -1,5 +1,5 @@
 #diagnose{
-    position: fixed;
+    /*position: fixed;*/
     top: 0;
     bottom: 0;
     right: 0;
@@ -8,7 +8,7 @@
     background: white;
     width: 100%;
     z-index: 99;
-    background-color: #1aad53;
+    /*background-color: #1aad53;*/
 }
 
 #diagnose .diagnose-header{
@@ -16,7 +16,7 @@
     justify-content: space-between;
     padding: 20px;
 
-    color:white;
+    /*color:white;*/
     font-size: 30px;
     font-weight: bold;
 
@@ -25,7 +25,7 @@
 }
 
 #diagnose .diagnose-header .logo{
-    color:white;
+    /*color:white;*/
     font-size: 30px;
     font-weight: bold;
 }
@@ -40,7 +40,7 @@
 
 #diagnose .select-products-container .search-product{
     width: 90%;
-    color:white;
+    /*color:white;*/
 }
 
 
