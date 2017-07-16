@@ -97,6 +97,7 @@ app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);
 app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
 app.get('/allergies',allergiesController.getAllAllergiesGet);
 app.post('/analyzeAllergies',allergiesController.analyzeAllergiesPost);
+app.post('/analyzeDB',allergiesController.analyzeAllergiesOnAllDbPost);
 
 
 //TBD

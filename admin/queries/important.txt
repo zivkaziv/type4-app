@@ -9,8 +9,8 @@ db.getCollection('scrapedproducts').count({ scrape_result: { $exists: true } })
 
 
 Export to CSV scraped products
-mongoexport -h ds117189.mlab.com:17189 -d heroku_kmh0mhqv -c scrapedproducts -u zivziv -p Z15194806k -o scraped.csv --csv -f barcode_id,amazon_id,name,category,image_url,scrape_result,scraped_time,ingredients,product_url,scraper_strategy
-
+mongoexport -h  ds133211.mlab.com:33211 -d heroku_wkzbhw5p -c scrapedproducts -u zivziv -p Z15194806k -o scraped.csv --csv -f barcode_id,amazon_id,name,category,image_url,scrape_result,scraped_time,ingredients,product_url,scraper_strategy
+mongoimport -h localhost:27017 -d test -c scrapedproducts -u zivziv -p Z15194806k --file <input .csv file> --type csv --headerline
 
 //backup old db - type4
 mongodump -h ds117189.mlab.com:17189 -d heroku_kmh0mhqv -u zivziv -p Z15194806k -o ./
@@ -19,8 +19,8 @@ mongorestore -h ds117189.mlab.com:17189 -d heroku_kmh0mhqv -u zivziv -p Z1519480
 //resotre new db - typeiv
 mongodump -h ds133211.mlab.com:33211 -d heroku_wkzbhw5p -u zivziv -p Z15194806k -o ./
 mongorestore -h ds133211.mlab.com:33211 -d heroku_wkzbhw5p -u zivziv -p Z15194806k ./
-
-
+//Localy
+mongorestore -h localhost:27017 -d test -u zivziv -p Z15194806k ./typeIV/dbbackup/
 
 
 

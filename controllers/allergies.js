@@ -23,13 +23,11 @@ exports.getAllAllergiesGet = function(req, res) {
 };
 
 exports.analyzeAllergiesPost = function(req,res){
-    console.log(req.body);
     var fullProducts = [];
     var promiseWaitList = [];
     var allergiesDetectedRaw = [];
     var sumDetection = [];
     var products = req.body.products;
-
     handleAllergies().then(()=>{
         products.map((product) =>{
             promiseWaitList.push(findProduct(product,fullProducts))
@@ -51,6 +49,26 @@ exports.analyzeAllergiesPost = function(req,res){
 
     });
 
+};
+
+exports.analyzeAllergiesOnAllDbPost = function(req,res){
+    var allergiesDetectedRaw = [];
+    var sumDetection = [];
+    var limit = req.query.limit ?Number(req.query.limit) :100;
+    var offset = req.query.offset ?Number(req.query.offset):0;
+
+    handleAllergies().then(()=>{
+        getAllProducts(limit,offset).then((products) =>{
+            products.map((product) =>{
+                var foundIngredients = getAllergyFromProduct(allergiesCache,product);
+                if(foundIngredients.length > 0) {
+                    allergiesDetectedRaw.push(foundIngredients);
+                }
+            });
+            sumDetection = sumAnalysis(allergiesDetectedRaw);
+            res.send(...sumDetection);
+        });
+    });
 };
 
 function findProduct(product,fullProducts){
@@ -78,7 +96,7 @@ function getAllergyFromProduct(allergies,product){
                         analysis: 'PROBLEMATIC_CHEMICAL',
                         weight:0.4,
                         chemicalName: allergies[allergyIndex].compound,
-                        products:[product.name]
+                        products:[product]
                     });
                     isSensitiveIngredient = true
                 }
@@ -119,4 +137,18 @@ function sumAnalysis(allergiesDetectedRaw){
         }
     });
     return analysis;
+}
+
+function getAllProducts(limit,offset){
+    return new Promise((resolve,reject) => {
+        let DbName = ScrapedProduct;
+        DbName.find().skip(offset).limit(limit).exec((err,products)=>{
+            if(err) reject(err);
+            resolve(products);
+        });
+        // DbName.find({}, function (err, products) {
+        //     if (err) reject(err);
+        //     resolve(products);
+        // })
+    });
 }
