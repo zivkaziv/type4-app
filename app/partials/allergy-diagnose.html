@@ -61,11 +61,10 @@
 
                 <div  style=" position: relative">
                     <md-input-container flex="50" style=" position: relative">
-                        <label>Favorite Color</label>
+                        <label>Skin effect</label>
                         <md-select name="favoriteColor" ng-model="selectedItem.favoriteColor">
                             <md-option value="RASH">Rash</md-option>
                             <md-option value="PIMPLES">Pimples</md-option>
-                            <md-option value="green">Green</md-option>
                         </md-select>
                         <div class="errors">
                             <div ng-message="required">Required</div>
@@ -73,6 +72,7 @@
                     </md-input-container>
                 </div>
                 <md-button class="md-raised" ng-click="select()" style="margin-top: 30px">Add</md-button>
+                <md-button class="md-raised" ng-click="clear()" style="margin-top: 30px">Clear</md-button>
             </div>
 
             <div class="selected-allergies-container">
@@ -87,21 +87,23 @@
                 </div>
             </div>
 
-            <md-button class="md-raised" ng-click="analyze()" style="margin-top: 30px">Analyze</md-button>
+            <!--<md-button class="md-raised" ng-click="analyze()" style="margin-top: 30px">Analyze</md-button>-->
         </div>
 
         <div class="right-side-container">
-            <div class="selected-allergies-container" ng-hide="allergiesDetected.length">
+            <div class="selected-allergies-container" ng-hide="allergiesDetected.length === 0">
                 <h3>Detected allergies</h3>
                 <div class="detected-allergy" style="display: flex; align-items: center; margin:30px" ng-repeat="allergyDetected in allergiesDetected">
-                    <div style="display: flex;flex-direction: column">
-                        <div>{{allergyDetected.chemicalName}}</div>
-                        <div>{{allergyDetected.weight}}</div>
-                        <div>{{allergyDetected.products}}</div>
+                    <div  style="display: flex;flex-direction: column">
+                        <div>Name: {{allergyDetected.chemicalName}} - {{allergyDetected.weight}}%</div>
+                        <div><b>Products:</b></div>
+                        <div class="allergy-related-products" ng-repeat="relatedProduct in allergyDetected.products">
+                            {{relatedProduct}}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="selected-allergies-container" ng-show="allergiesDetected.length">
+            <div class="selected-allergies-container" ng-show="allergiesDetected.length === 0">
                 <h3>No allergies detected</h3>
             </div>
         </div>

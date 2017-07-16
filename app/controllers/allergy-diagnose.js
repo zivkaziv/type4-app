@@ -63,6 +63,14 @@ angular.module('MyApp')
             $scope.addSelectedProduct($scope.selectedItem);
             $scope.selectedItem = {};
             $scope.searchCriteria.searchText = ' ';
+            $scope.analyze();
+        };
+
+        $scope.clear = function(){
+            $scope.selectedProducts.length = 0;
+            $scope.allergiesDetected.length = 0;
+            $scope.selectedItem = {};
+            $scope.searchCriteria.searchText = ' ';
         };
 
         $scope.addSelectedProduct = function(productToAdd){
@@ -79,7 +87,7 @@ angular.module('MyApp')
 
         $scope.analyze = function(){
             AllergyDetectionService.analyze($scope.selectedProducts).then((allergies)=>{
-                $scope.allergiesDetected = allergies.data;
+                $scope.allergiesDetected = allergies.data === ''?[]:allergies.data;
                 console.log($scope.allergiesDetected);
             });
         };
