@@ -32,7 +32,7 @@ mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
 });
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8000);
 app.use(compression());
 app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -12,78 +12,99 @@
 
 
     <div class="diagnose-body">
-        <div class="select-products-container">
-            <md-content layout-padding layout="column">
-                <form ng-submit="$event.preventDefault()">
-                    <md-autocomplete
-                            md-no-cache="true"
-                            md-input-name="autocompleteField"
-                            ng-disabled="false"
-                            md-selected-item="selected"
-                            md-search-text-change="searchTextChange(searchCriteria.searchText)"
-                            md-search-text="searchCriteria.searchText"
-                            md-selected-item-change="selectedItemChange(item)"
-                            md-items="item in search(searchCriteria.searchText)"
-                            md-item-text="getProductDetails(item)"
-                            md-min-length="0"
-                            placeholder="Pick an Angular repository"
-                            md-menu-class="autocomplete-custom-template">
-                        <md-item-template>
-                              <span class="item-title" style="display: flex;align-items: center">
-                                <img style="height: 30px; margin-right: 10px" src={{item.image_url}}>
-                                <span> {{item.name}} </span>
-                              </span>
-                             <span class="item-metadata">
-                                <!--<span>-->
-                                  <!--<strong>{{item.watchers}}</strong> watchers-->
-                                <!--</span>-->
-                                <!--<span>-->
-                                  <!--<strong>{{item.forks}}</strong> forks-->
-                                <!--</span>-->
-                              </span>
-                        </md-item-template>
-                    </md-autocomplete>
-                </form>
-            </md-content>
-        </div>
-
-        <div class="selected-product-container" >
-            <div class="selected-product" style="display: flex; align-items: center; margin:30px">
-                <img src={{selectedItem.image_url}} style="height: 50px">
-                <div>{{selectedItem.name}}</div>
+        <div class="left-side-container">
+            <div class="select-products-container">
+                <md-content layout-padding layout="column">
+                    <form ng-submit="$event.preventDefault()">
+                        <md-autocomplete
+                                md-no-cache="true"
+                                md-input-name="autocompleteField"
+                                ng-disabled="false"
+                                md-selected-item="selected"
+                                md-search-text-change="searchTextChange(searchCriteria.searchText)"
+                                md-search-text="searchCriteria.searchText"
+                                md-selected-item-change="selectedItemChange(item)"
+                                md-items="item in search(searchCriteria.searchText)"
+                                md-item-text="getProductDetails(item)"
+                                md-min-length="0"
+                                placeholder="Pick an Angular repository"
+                                md-menu-class="autocomplete-custom-template">
+                            <md-item-template>
+                                  <span class="item-title" style="display: flex;align-items: center">
+                                    <img style="height: 30px; margin-right: 10px" src={{item.image_url}}>
+                                    <span> {{item.name}} </span>
+                                  </span>
+                                 <span class="item-metadata">
+                                    <!--<span>-->
+                                      <!--<strong>{{item.watchers}}</strong> watchers-->
+                                    <!--</span>-->
+                                    <!--<span>-->
+                                      <!--<strong>{{item.forks}}</strong> forks-->
+                                    <!--</span>-->
+                                  </span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </form>
+                </md-content>
             </div>
 
-            <!--<select name="singleSelect" ng-model="selectedItem.personal_effect">-->
-                <!--<option value="RASH">Rash</option>-->
-                <!--<option value="PIMPLES">Pimples</option>-->
-            <!--</select>-->
-
-            <div  style=" position: relative">
-                <md-input-container flex="50" style=" position: relative">
-                    <label>Favorite Color</label>
-                    <md-select name="favoriteColor" ng-model="selectedItem.favoriteColor">
-                        <md-option value="RASH">Rash</md-option>
-                        <md-option value="PIMPLES">Pimples</md-option>
-                        <md-option value="green">Green</md-option>
-                    </md-select>
-                    <div class="errors">
-                        <div ng-message="required">Required</div>
-                    </div>
-                </md-input-container>
-            </div>
-            <md-button class="md-raised" ng-click="select()" style="margin-top: 30px">Add</md-button>
-        </div>
-
-        <div class="found-allergies-container">
-            <!--Selected products - mdlist-->
-            <h3>Selected items</h3>
-            <div class="selected-product" style="display: flex; align-items: center; margin:30px" ng-repeat="product in selectedProducts">
-                <img src={{product.image_url}} style="height: 50px">
-                <div style="display: flex;flex-direction: column">
-                    <div>{{product.name}}</div>
-                    <div>{{product.personal_effect}}</div>
+            <div class="selected-product-container" >
+                <div class="selected-product" style="display: flex; align-items: center; margin:30px">
+                    <img src={{selectedItem.image_url}} style="height: 50px">
+                    <div>{{selectedItem.name}}</div>
                 </div>
+
+                <!--<select name="singleSelect" ng-model="selectedItem.personal_effect">-->
+                    <!--<option value="RASH">Rash</option>-->
+                    <!--<option value="PIMPLES">Pimples</option>-->
+                <!--</select>-->
+
+                <div  style=" position: relative">
+                    <md-input-container flex="50" style=" position: relative">
+                        <label>Favorite Color</label>
+                        <md-select name="favoriteColor" ng-model="selectedItem.favoriteColor">
+                            <md-option value="RASH">Rash</md-option>
+                            <md-option value="PIMPLES">Pimples</md-option>
+                            <md-option value="green">Green</md-option>
+                        </md-select>
+                        <div class="errors">
+                            <div ng-message="required">Required</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <md-button class="md-raised" ng-click="select()" style="margin-top: 30px">Add</md-button>
+            </div>
+
+            <div class="selected-allergies-container">
+                <!--Selected products - mdlist-->
+                <h3>Selected items</h3>
+                <div class="selected-product" style="display: flex; align-items: center; margin:30px" ng-repeat="product in selectedProducts">
+                    <img src={{product.image_url}} style="height: 50px">
+                    <div style="display: flex;flex-direction: column">
+                        <div>{{product.name}}</div>
+                        <div>{{product.personal_effect}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <md-button class="md-raised" ng-click="analyze()" style="margin-top: 30px">Analyze</md-button>
+        </div>
+
+        <div class="right-side-container">
+            <div class="selected-allergies-container" ng-hide="allergiesDetected.length">
+                <h3>Detected allergies</h3>
+                <div class="detected-allergy" style="display: flex; align-items: center; margin:30px" ng-repeat="allergyDetected in allergiesDetected">
+                    <div style="display: flex;flex-direction: column">
+                        <div>{{allergyDetected.chemicalName}}</div>
+                        <div>{{allergyDetected.weight}}</div>
+                        <div>{{allergyDetected.products}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="selected-allergies-container" ng-show="allergiesDetected.length">
+                <h3>No allergies detected</h3>
             </div>
         </div>
     </div>
+
 </div>

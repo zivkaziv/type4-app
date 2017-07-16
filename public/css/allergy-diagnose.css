@@ -34,8 +34,12 @@
    width: 10px;
 }
 
+#diagnose .diagnose-body{
+    display: flex;
+}
+
 #diagnose .select-products-container{
-    width: 40%;
+    /*width: 40%;*/
 }
 
 #diagnose .select-products-container .search-product{
@@ -68,4 +72,12 @@
 
 .cdk-overlay-container {
     z-index:1127;
+}
+
+.left-side-container{
+    width: 60%;
+}
+
+.right-side-container{
+    width: 40%;
 }

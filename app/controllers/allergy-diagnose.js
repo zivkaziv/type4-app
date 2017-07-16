@@ -1,10 +1,11 @@
 angular.module('MyApp')
     .controller('AllergyDiagnoseCtrl',
-        function($scope, $location, $window, $auth,ProductsService,$q,$log) {
+        function($scope, $location, $window, $auth,ProductsService,$q,$log,AllergyDetectionService) {
         $scope.querySearch  = $scope.search;
         $scope.selected = {};
         $scope.selectedItem = {};
         $scope.selectedProducts = [];
+        $scope.allergiesDetected = [];
         $scope.isLoading = false;
         $scope.isSaved = false;
 
@@ -58,7 +59,6 @@ angular.module('MyApp')
             return viewLocation === $location.path();
         };
 
-
         $scope.select = function(){
             $scope.addSelectedProduct($scope.selectedItem);
             $scope.selectedItem = {};
@@ -75,5 +75,12 @@ angular.module('MyApp')
             if(shouldAdd){
                 $scope.selectedProducts.push(productToAdd);
             }
-        }
+        };
+
+        $scope.analyze = function(){
+            AllergyDetectionService.analyze($scope.selectedProducts).then((allergies)=>{
+                $scope.allergiesDetected = allergies.data;
+                console.log($scope.allergiesDetected);
+            });
+        };
     });

@@ -4,13 +4,14 @@
 
 var allergiesBuilder = require('../business/logic/allergiescollectionbuilder');
 var Allergy = require('../models/Allergy');
-
+var Product = require('../models/Product');
+var ScrapedProduct = require('../models/Scrapedprodcut');
 var allergiesCache = [];
+
 exports.buildAllergiesCollectionPost = function(req, res) {
     allergiesBuilder.buildAllergiesCollection();
     res.send('done');
 };
-
 /**
  * GET /allergies
  */
@@ -24,47 +25,70 @@ exports.getAllAllergiesGet = function(req, res) {
 exports.analyzeAllergiesPost = function(req,res){
     console.log(req.body);
     var fullProducts = [];
-    var allergiesDetected = [];
+    var promiseWaitList = [];
+    var allergiesDetectedRaw = [];
+    var sumDetection = [];
     var products = req.body.products;
 
     handleAllergies().then(()=>{
         products.map((product) =>{
-            fullProducts.push(findProduct(product))
+            promiseWaitList.push(findProduct(product,fullProducts))
+        });
+        Promise.all(promiseWaitList).then(() => {
+            fullProducts.map((product) =>{
+                var foundAIngredients = getAllergyFromProduct(allergiesCache,product);
+                if(foundAIngredients.length > 0) {
+                    allergiesDetectedRaw.push(foundAIngredients);
+                }
+            });
+
+            sumDetection = sumAnalysis(allergiesDetectedRaw);
+
+            res.send(...sumDetection);
+        }).catch((e) => {
+            res.error(e);
         });
 
-        fullProducts.map((product) =>{
-            allergiesDetected.push(getAllergyFromProduct(allergiesCache,product))
-        });
-
-        res.send(allergiesDetected);
     });
 
 };
 
-function findProduct(product){
-    return product;
+function findProduct(product,fullProducts){
+    return new Promise((resolve,reject) => {
+        let DbName = ScrapedProduct;
+        if (product.db && product.db.indexOf('scrape') === -1) {
+            DbName = Product;
+        }
+        DbName.findById(product._id,function(err,product){
+            if(err) reject(err);
+            fullProducts.push(product);
+            resolve(product);
+        })
+    });
 }
 
 function getAllergyFromProduct(allergies,product){
     var ingredient_analysis =[];
-    if(allergies && product){
+    if(allergies && product && product.ingredients){
         for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
             let isSensitiveIngredient = false;
             for (let allergyIndex = 0; allergyIndex < allergies.length; allergyIndex++) {
                 if (allergies[allergyIndex].compound.toLowerCase().indexOf(product.ingredients[ingredientIndex].toLowerCase()) > -1) {
                     ingredient_analysis.push({
-                        name: product.ingredients[ingredientIndex],
-                        analysis: 'SENSITIVE'
+                        analysis: 'PROBLEMATIC_CHEMICAL',
+                        weight:0.4,
+                        chemicalName: allergies[allergyIndex].compound,
+                        products:[product.name]
                     });
                     isSensitiveIngredient = true
                 }
             }
-            if(!isSensitiveIngredient){
-                ingredient_analysis.push({
-                    name: product.ingredients[ingredientIndex],
-                    analysis: 'NOT_SENSITIVE'
-                })
-            }
+            // if(!isSensitiveIngredient){
+            //     ingredient_analysis.push({
+            //         name: product.ingredients[ingredientIndex],
+            //         analysis: 'NOT_SENSITIVE'
+            //     })
+            // }
         }
     }
     return ingredient_analysis;
@@ -81,4 +105,18 @@ function handleAllergies(){
             resolve(allergiesCache);
         }
     });
+}
+
+function sumAnalysis(allergiesDetectedRaw){
+    var analysis = new Set();
+    allergiesDetectedRaw.map((allergy) => {
+        if(!analysis[allergy]){
+            analysis.add(allergy);
+        }else{
+            analysis[allergy].weight += allergy.weight;
+            analysis[allergy].weight = analysis[allergy].weight > 1 ? 1 : analysis[allergy].weight;
+            analysis[allergy].products.concat(allergy.products);
+        }
+    });
+    return analysis;
 }
