@@ -6,6 +6,7 @@ var allergiesBuilder = require('../business/logic/allergiescollectionbuilder');
 var Allergy = require('../models/Allergy');
 var Product = require('../models/Product');
 var ScrapedProduct = require('../models/Scrapedprodcut');
+var nodemailer = require('nodemailer');
 var allergiesCache = [];
 
 exports.buildAllergiesCollectionPost = function(req, res) {
@@ -66,9 +67,10 @@ exports.analyzeAllergiesOnAllDbPost = function(req,res){
                 }
             });
             sumDetection = sumAnalysis(allergiesDetectedRaw);
-            res.send(...sumDetection);
+            sendSummaryEmail(sumDetection);
         });
     });
+    res.send('Will be send shortly');
 };
 
 function findProduct(product,fullProducts){
@@ -150,5 +152,25 @@ function getAllProducts(limit,offset){
         //     if (err) reject(err);
         //     resolve(products);
         // })
+    });
+}
+
+function sendSummaryEmail(sumDetection){
+    var transporter = nodemailer.createTransport({
+        service: 'Mailgun',
+        auth: {
+            user: process.env.MAILGUN_USERNAME,
+            pass: process.env.MAILGUN_PASSWORD
+        }
+    });
+    var mailOptions = {
+        to: 'ziv@typeiv.com;boaz@typeiv.com',
+        from: 'info@typeiv.com',
+        subject: '✔ Reset your password on Mega Boilerplate',
+        text: JSON.stringify(...sumDetection)
+    };
+    transporter.sendMail(mailOptions, function(err) {
+        if(err) console.log(err);
+        else console.log('email sent');
     });
 }
