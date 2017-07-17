@@ -166,7 +166,7 @@ function sendSummaryEmail(sumDetection){
     var mailOptions = {
         to: 'ziv@typeiv.com;boaz@typeiv.com',
         from: 'info@typeiv.com',
-        subject: '✔ Reset your password on Mega Boilerplate',
+        subject: 'Allergy analysis on our DB',
         text: JSON.stringify(...sumDetection)
     };
     transporter.sendMail(mailOptions, function(err) {
