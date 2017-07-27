@@ -75,6 +75,7 @@ app.post('/react/product',productController.reportReactionProductPost);
 app.post('/add/product',productController.addProductManually);
 app.get('/product/:pId',productController.productGet);
 app.get('/product',productController.productByQueryGet);
+app.get('/producttoadd',productController.productToAddGet);
 app.post('/product',productController.productPost);
 app.get('/component',componentController.componentGet);
 

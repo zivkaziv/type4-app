@@ -39,6 +39,10 @@ angular.module('MyApp', ['ngRoute', 'satellizer','ngMaterial'])
           templateUrl: 'partials/product-editor.html',
           controller: 'ProductEditorCtrl',
       })
+        .when('/add-product-editor', {
+            templateUrl: 'partials/add-product.html',
+            controller: 'AddProductEditorCtrl',
+        })
       .when('/diagnose', {
             templateUrl: 'partials/allergy-diagnose.html',
             controller: 'AllergyDiagnoseCtrl',

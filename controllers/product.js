@@ -248,6 +248,22 @@ exports.addProductManually = function(req, res){
     }
 };
 
+exports.productToAddGet = function(req, res){
+    ManualProduct.findOne({'status':'FOR_REVIEW'},(err,product) => {
+        if(err) res.error(err);
+        res.send(product);
+    });
+};
+//
+//
+// exports.updateProductToAdd = function(req, res){
+//     let productToUpdate = req.product;
+//     ManualProduct.findById(productToUpdate._id,(err,product) => {
+//         if(err) res.error(err);
+//         product.status
+//     });
+// };
+
 function markProblematicIngredients(user,product){
     if(user && product){
         product.ingredient_analysis = [];
