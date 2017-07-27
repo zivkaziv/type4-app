@@ -234,6 +234,7 @@ exports.addProductManually = function(req, res){
         manualProduct.ingredients_image_url = manualProductToSave.ingredients_image_url;
         manualProduct.barcode_id = manualProductToSave.barcode_id;
         manualProduct.location = manualProductToSave.location;
+        manualProduct.product = manualProductToSave.product;
         manualProduct.save(function (err) {
             if (err) {
                 res.error(err);

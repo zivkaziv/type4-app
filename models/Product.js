@@ -13,6 +13,7 @@ var productSchema = new mongoose.Schema({
     name: String,
     category: String,
     image_url: String,
+    ingredients_image_url: String,
     scrape_result: String,
     number_of_searches: Number,
     scraped_time: Date,
