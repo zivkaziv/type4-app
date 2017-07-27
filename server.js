@@ -72,6 +72,7 @@ app.post('/reset/:token', userController.resetPost);
 app.post('/product/:pId',productController.productByIdPost);
 app.post('/report/product',productController.reportProblematicProductPost);
 app.post('/react/product',productController.reportReactionProductPost);
+app.post('/add/product',productController.addProductManually);
 app.get('/product/:pId',productController.productGet);
 app.get('/product',productController.productByQueryGet);
 app.post('/product',productController.productPost);

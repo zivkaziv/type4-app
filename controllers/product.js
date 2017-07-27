@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 var Product = require('../models/Product');
 var ScrapedProduct = require('../models/Scrapedprodcut');
+var ManualProduct = require('../models/ManualProduct');
 var UserProductSearch= require('../models/UserProductSearch');
 var UserProductReaction= require('../models/UserProductReaction');
 
@@ -210,6 +211,34 @@ exports.reportReactionProductPost = function(req, res) {
                 res.send('SAVED');
             }else{
                 res.send('NO_PRODUCT');
+            }
+        });
+    }else{
+        res.send('TOKEN');
+    }
+};
+
+exports.addProductManually = function(req, res){
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+
+    if(userId) {
+        let manualProductToSave = req.body;
+        let manualProduct = new ManualProduct();
+        manualProduct.user = manualProductToSave.user;
+        manualProduct.product_image_url = manualProductToSave.product_image_url;
+        manualProduct.ingredients_image_url = manualProductToSave.ingredients_image_url;
+        manualProduct.barcode_id = manualProductToSave.barcode_id;
+        manualProduct.location = manualProductToSave.location;
+        manualProduct.save(function (err) {
+            if (err) {
+                res.error(err);
+            } else {
+                res.send('SAVED');
             }
         });
     }else{
