@@ -235,6 +235,7 @@ exports.addProductManually = function(req, res){
         manualProduct.barcode_id = manualProductToSave.barcode_id;
         manualProduct.location = manualProductToSave.location;
         manualProduct.product = manualProductToSave.product;
+        manualProduct.status = "FOR_REVIEW";
         manualProduct.save(function (err) {
             if (err) {
                 res.error(err);

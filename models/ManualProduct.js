@@ -17,6 +17,7 @@ var manualProductSchema = new mongoose.Schema({
     ingredients_image_url:String,
     barcode_id:String,
     product_url:String,
+    status:String,
     location: {}
 }, schemaOptions);
 
