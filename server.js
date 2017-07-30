@@ -73,6 +73,7 @@ app.post('/product/:pId',productController.productByIdPost);
 app.post('/report/product',productController.reportProblematicProductPost);
 app.post('/react/product',productController.reportReactionProductPost);
 app.post('/add/product',productController.addProductManually);
+app.post('/save/product',productController.saveProductManually);
 app.get('/product/:pId',productController.productGet);
 app.get('/product',productController.productByQueryGet);
 app.get('/producttoadd',productController.productToAddGet);

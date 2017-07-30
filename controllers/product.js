@@ -249,11 +249,97 @@ exports.addProductManually = function(req, res){
 };
 
 exports.productToAddGet = function(req, res){
-    ManualProduct.findOne({'status':'FOR_REVIEW'},(err,product) => {
+    ManualProduct.findOne({'status':req.query.status},(err,product) => {
         if(err) res.error(err);
         res.send(product);
     });
 };
+
+exports.saveProductManually = function(req, res){
+    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    var tokenParams = jwt.decode(token, process.env.TOKEN_SECRET);
+    var userId = undefined;
+    if(tokenParams){
+        userId = tokenParams.sub;
+    }
+
+    if(userId) {
+        let manualProductToSave = req.body;
+        if(manualProductToSave.status.indexOf('MARK') > -1){
+            ManualProduct.findById(manualProductToSave._id,(err,manualProduct)=>{
+                if(manualProduct) {
+                    manualProduct.user = manualProductToSave.user;
+                    manualProduct.product_image_url = manualProductToSave.product_image_url;
+                    manualProduct.ingredients_image_url = manualProductToSave.ingredients_image_url;
+                    manualProduct.barcode_id = manualProductToSave.barcode_id;
+                    manualProduct.location = manualProductToSave.location;
+                    manualProduct.product = manualProductToSave.product;
+                    manualProduct.status = manualProductToSave.status;
+                    manualProduct.save(function (err) {
+                        if (err) {
+                            res.error(err);
+                        } else {
+                            res.send('SAVED');
+                        }
+                    });
+                }else{
+                    res.send('NO_PRODUCT_IN_DB');
+                }
+            });
+
+        }else{
+
+            Product.findOne({barcode_id:manualProductToSave.product.barcode_id},(err,productToSave)=>{
+                if(!productToSave){
+                    productToSave = new Product();
+                }
+                productToSave.ingredients = manualProductToSave.product.ingredients;
+                productToSave.name = manualProductToSave.product.name;
+                productToSave.image_url = manualProductToSave.product.image_url;
+                productToSave.barcode_id = manualProductToSave.product.barcode_id;
+                productToSave.amazon_id = manualProductToSave.product.amazon_id;
+                productToSave.category = manualProductToSave.product.category;
+                productToSave.product_url = manualProductToSave.product.product_url;
+                var validMessage = validateNewProduct(productToSave);
+                if( validMessage.indexOf('OK')> -1) {
+                    productToSave.save((err) => {
+                        if (err) {
+                            res.send(err.message);
+                        } else {
+                            res.send('SAVED');
+                        }
+                        ManualProduct.findById(manualProductToSave._id, (err, manualProduct) => {
+                            if (manualProduct) {
+                                manualProduct.user = manualProductToSave.user;
+                                manualProduct.product_image_url = manualProductToSave.product_image_url;
+                                manualProduct.ingredients_image_url = manualProductToSave.ingredients_image_url;
+                                manualProduct.barcode_id = manualProductToSave.barcode_id;
+                                manualProduct.location = manualProductToSave.location;
+                                manualProduct.product = productToSave;
+                                manualProduct.status = 'SAVED';
+                                manualProduct.save(function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log('SAVED');
+                                    }
+                                });
+                            } else {
+                                console.log('NO_PRODUCT_IN_DB');
+                            }
+                        });
+                    });
+                }else{
+                    res.send(validMessage);
+                }
+            });
+
+        }
+    }else{
+        res.send('TOKEN');
+    }
+};
+
 //
 //
 // exports.updateProductToAdd = function(req, res){
@@ -354,4 +440,18 @@ function saveUserProductReaction(user,product,location){
     }catch (err){
         console.log(err);
     }
+}
+
+function validateNewProduct(product){
+    if(!product.name){
+        return 'NO_NAME';
+    }
+    if(!product.ingredients){
+        return 'NO_INGREDIENTS';
+    }
+    if(!product.barcode_id){
+        return 'NO_BARCODE';
+    }
+
+    return 'OK'
 }

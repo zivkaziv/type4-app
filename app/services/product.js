@@ -15,6 +15,12 @@ angular.module('MyApp')
             },
             update: function(product) {
                 return $http.post('/product', product);
+            },
+            getProductToAdd: function(status) {
+                return $http.get('/producttoadd?status=' + status);
+            },
+            saveProductToAdd: function(product) {
+                return $http.post('save/product', product);
             }
         };
     });
