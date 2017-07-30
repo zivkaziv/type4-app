@@ -269,7 +269,7 @@ exports.saveProductManually = function(req, res){
 
     if(userId) {
         let manualProductToSave = req.body;
-        if(manualProductToSave.status.indexOf('MARK') > -1 || manualProductToSave.status.indexOf('FOR_REVIEW') > -1){
+        if(manualProductToSave.status.indexOf('MARK') > -1){
             ManualProduct.findById(manualProductToSave._id,(err,manualProduct)=>{
                 if(manualProduct) {
                     manualProduct.user = manualProductToSave.user;
