@@ -2,7 +2,7 @@
     <div>
         <!--Header area-->
         <div style="display:flex;justify-content: center; ">
-            <div ng-show="index>0" class="prev" ng-click="prev()"
+            <div ng-show="index > 0" class="prev" ng-click="prev()"
                  style="border: 1px solid black;padding: 10px;align-self: center;cursor: pointer">
                 <
             </div>
@@ -63,7 +63,8 @@
                         <md-button ng-show="!isSaved" ng-click="save()" class="md-raised md-primary">Save</md-button>
                         <md-button ng-show="isSaved"  ng-click="save()" class="md-raised md-primary">Saved</md-button>
                         <md-button ng-click="undo()" class="md-raised md-warning">Undo</md-button>
-                        <md-button ng-click="mark()" class="md-raised md-warning">Mark</md-button>
+                        <md-button ng-show="products[index].status === 'FOR_REVIEW'" ng-click="mark('MARK')" class="md-raised md-warning">Mark</md-button>
+                        <md-button ng-show="products[index].status === 'MARK'" ng-click="mark('FOR_REVIEW')" class="md-raised md-warning">UnMark</md-button>
                     </div>
                 </div>
                 <div style="display: flex;flex-direction: column;margin-left:30px">

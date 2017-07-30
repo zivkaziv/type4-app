@@ -232,7 +232,11 @@ exports.addProductManually = function(req, res){
         manualProduct.user = manualProductToSave.user;
         manualProduct.product_image_url = manualProductToSave.product_image_url;
         manualProduct.ingredients_image_url = manualProductToSave.ingredients_image_url;
-        manualProduct.barcode_id = manualProductToSave.barcode_id;
+        if(manualProductToSave.product && manualProductToSave.product.barcode_id){
+            manualProduct.barcode_id = manualProductToSave.product.barcode_id;
+        }else {
+            manualProduct.barcode_id = manualProductToSave.barcode_id;
+        }
         manualProduct.location = manualProductToSave.location;
         manualProduct.product = manualProductToSave.product;
         manualProduct.status = "FOR_REVIEW";
@@ -265,7 +269,7 @@ exports.saveProductManually = function(req, res){
 
     if(userId) {
         let manualProductToSave = req.body;
-        if(manualProductToSave.status.indexOf('MARK') > -1){
+        if(manualProductToSave.status.indexOf('MARK') > -1 || manualProductToSave.status.indexOf('FOR_REVIEW') > -1){
             ManualProduct.findById(manualProductToSave._id,(err,manualProduct)=>{
                 if(manualProduct) {
                     manualProduct.user = manualProductToSave.user;

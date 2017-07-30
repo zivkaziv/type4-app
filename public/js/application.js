@@ -98,9 +98,8 @@ angular.module('MyApp')
 
         $scope.$watch('index',function(){
             $scope.isSaved = false;
-            var indexToSave = 0;
             if($scope.index > 0 && $scope.products[$scope.index]){
-                $scope.undoSelected = $scope.products[$scope.index--];
+                $scope.undoSelected = $scope.products[$scope.index-1];
             }
             $scope.error ='';
         },true);
@@ -148,17 +147,20 @@ angular.module('MyApp')
             });
         };
 
-        $scope.mark = function(){
-            $scope.products[$scope.index].status = 'MARK';
+        $scope.mark = function(status){
+            $scope.products[$scope.index].status = status;
             ProductsService.saveProductToAdd($scope.products[$scope.index]).then(()=>{
                 $scope.next();
             });
         };
+
         $scope.loadNewProduct = function(){
             ProductsService.getProductToAdd($scope.productStatus).then(function(product){
                 if($scope.addNewProduct(product.data)){
                     $scope.index++;
                     $scope.undoSelected = $scope.products[$scope.index];
+                }else{
+                    // $scope.index++;
                 }
                 console.log($scope.products[$scope.index]);
             });
@@ -166,16 +168,17 @@ angular.module('MyApp')
 
         $scope.next = function(){
             console.log('next');
-            if($scope.index+1 < $scope.products.length){
+            if($scope.index + 1 >= $scope.products.length){
                 $scope.loadNewProduct();
             }else{
+                $scope.index++;
                 $scope.undoSelected = $scope.products[$scope.index];
             }
         };
 
         $scope.prev = function(){
             console.log('prev');
-            $scope.index = $scope.index>0?$scope.index--:0;
+            $scope.index = $scope.index>0?$scope.index - 1: 0 ;
             $scope.undoSelected = $scope.products[$scope.index];
         };
 
@@ -183,7 +186,7 @@ angular.module('MyApp')
 
         $scope.addNewProduct = function(product){
             var isAdded = true;
-            for(var i= i; i < $scope.products.length; i++){
+            for(var i= 0; i < $scope.products.length; i++){
                 if($scope.products[i]._id === product._id){
                     isAdded = false;
                     break;
