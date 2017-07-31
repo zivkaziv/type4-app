@@ -26,5 +26,13 @@ var productSchema = new mongoose.Schema({
 
 var Product = mongoose.model('Product', productSchema);
 
+productSchema.pre('save', (next) => {
+    var product = this;
+    if(!product.image_url || product.image_url === ''){
+        product.image_url = 'http://typeiv.herokuapp.com/images/no_image.png';
+    }
+    next();
+});
+
 module.exports = Product;
 

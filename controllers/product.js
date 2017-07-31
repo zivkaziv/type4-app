@@ -397,6 +397,15 @@ function markProblematicIngredients(user,product){
 
 function saveUserSearch(user,product,location){
     user.searches.push(product);
+    try {
+        let uniqSearches = a => [...new Set(a)];
+        if(uniqSearches.length > 0){
+            user.searches = uniqSearches;
+        }
+    }catch (err){
+        console.log(err)
+    }
+
     user.save();
 
     try {
