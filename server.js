@@ -90,6 +90,7 @@ app.post('/lorealusa',scrapingController.lorealParisUsaScrapePost);
 app.post('/png',scrapingController.pnGScrapePost);
 app.post('/goodguide',scrapingController.goodGuideScrapePost);
 app.post('/jnj',scrapingController.jnjScrapePost);
+app.post('/skinsafe',scrapingController.skinSafeScrapePost);
 
 app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
 app.get('/scrapingmonitor',scrapingController.ScrapeProductsStartGet);

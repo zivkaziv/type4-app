@@ -14,6 +14,7 @@ var lorealUsaScraperObject  = require('./lorealusascraper');
 var pngMainScraperObject  = require('./PnG/pngmainscraper');
 var jnjMainScraperObject  = require('./JnJ/jnjmainscraper');
 var goodGuideScraperObject  = require('./goodguidescraper');
+var skinSafeScraperObject  = require('./skinsafescraper');
 
 exports.CommonScraper = class CommonScraper {
     constructor() {
@@ -29,6 +30,7 @@ exports.CommonScraper = class CommonScraper {
         var pngMainScraper = new pngMainScraperObject.PnGMainScraper();
         var jnjMainScraper = new jnjMainScraperObject.JnJMainScraper();
         var goodGuideScraper = new goodGuideScraperObject.GoodGuideScraper();
+        var skinSafeScraper = new skinSafeScraperObject.SkinSafeScraper();
 
         return setInterval(function() {
             ScrapedProduct.count({"ingredients": {$size: 0}}).exec(function(err, count) {
@@ -53,7 +55,10 @@ exports.CommonScraper = class CommonScraper {
                                     lorealUsaScraper.handleProduct(productToScrape);
                                 }else if (productToScrape.scraper_strategy === goodGuideScraper.getScrapeStrategy()) {
                                     goodGuideScraper.handleProduct(productToScrape);
+                                }else if (productToScrape.scraper_strategy === skinSafeScraper.getScrapeStrategy()) {
+                                    skinSafeScraper.handleProduct(productToScrape);
                                 }
+
 
                                 //Those brands are house of brands, therefore we have one scarper and there
                                 //we have the logic relate to the relevant brand
