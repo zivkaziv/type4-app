@@ -68,7 +68,7 @@ exports.extractFromAmazon = function(product, barcodeId, resolve, unfoundProduct
             }
             product.name = $('#productTitle').text().trim();
             product.category = $('#nav-subnav').attr('data-category') ? $('#nav-subnav').attr('data-category').trim() : '';
-            product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : '';
+            product.image_url = $('#landingImage').attr('data-old-hires') ? $('#landingImage').attr('data-old-hires').trim() : 'http://typeiv.herokuapp.com/images/no_image.png';
             product.scrape_result = 'FOUND';
             product.scraper_strategy = 'amazon-us';
             product.scraped_time = new Date();
