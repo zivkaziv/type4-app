@@ -336,3 +336,20 @@ exports.resetPost = function(req, res, next) {
     }
   ]);
 };
+
+exports.fixUserFieldsPost = function(req,res){
+  let email = req.body.email;
+  User.findOne({email:req.body.email},function(err,user){
+    if(err) return res.send(err);
+    if(user){
+        //remove duplicates from search;
+        if(user.searches) {
+            user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
+        }
+        user.save();
+        res.send('DONE');
+    }else{
+        res.send('NO_USER');
+    }
+  })
+};

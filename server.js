@@ -69,6 +69,9 @@ app.put('/account', userController.ensureAuthenticated, userController.accountPu
 app.put('/clear/history', userController.ensureAuthenticated, userController.clearHistory);
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
+app.post('/fixuserfields', userController.fixUserFieldsPost);
+
+
 app.post('/product/:pId',productController.productByIdPost);
 app.post('/report/product',productController.reportProblematicProductPost);
 app.post('/react/product',productController.reportReactionProductPost);
