@@ -398,11 +398,7 @@ function markProblematicIngredients(user,product){
 function saveUserSearch(user,product,location){
     user.searches.push(product);
     try {
-        let uniq = a => [...new Set(a)];
-        let uniqSearches = uniq(user.searches);
-        if(uniqSearches.length > 0){
-            user.searches = uniqSearches;
-        }
+        user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
     }catch (err){
         console.log(err)
     }
