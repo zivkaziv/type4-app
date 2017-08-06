@@ -21,7 +21,7 @@ exports.scrape = function(barcodeId){
         console.log(url);
         cheerioReq(url, (err, $) => {
             let productName = $('.detailtitle b').text();
-            if(productName === '' || !productName){
+            if(false){
                 unfoundProduct.barcode_id = product.barcode_id;
                 unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_UPC_ITEM_DB';
                 reject(unfoundProduct);
@@ -38,7 +38,7 @@ exports.scrape = function(barcodeId){
                         let name = $(names[nameIndex]).text().trim();
                         optionalNames.push(name);
                     }
-                    ScrapedProduct.find({ name: {$in : optionalNames }}, function(err, products) {
+                    ScrapedProduct.find({$or:[{barcode_id:product.barcode_id},{ name: {$in : optionalNames }}]}, function(err, products) {
                         if(products && products.length > 0) {
                             let selectedProduct = products[0];
                             product.name = selectedProduct.name;

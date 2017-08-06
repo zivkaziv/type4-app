@@ -11,11 +11,11 @@ exports.scrapeProduct = function(barcodeId){
             resolve(product);
         },function(err){
             console.log(err);
-            digitalEysScraper.scrape(barcodeId).then(function(product){
+            upcItemDbScraper.scrape(barcodeId).then(function(product){
                 resolve(product);
             },function(err){
                 console.log(err);
-                upcItemDbScraper.scrape(barcodeId).then(function(product){
+                digitalEysScraper.scrape(barcodeId).then(function(product){
                     resolve(product);
                 },function(err){
                     reject(err);
