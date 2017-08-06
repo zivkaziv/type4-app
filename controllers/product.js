@@ -448,6 +448,9 @@ function saveUserProductReaction(user,product,location){
         console.log('user reactions - saved');
         User.findById(user.id , function(err, user) {
             console.log('user - saved');
+            if(!user.reactions){
+                user.reactions = [];
+            }
             user.reactions.push(product);
             user.save();
         });
