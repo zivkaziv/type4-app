@@ -446,7 +446,7 @@ function saveUserProductReaction(user,product,location){
         userProductReaction.analysis = product.ingredient_analysis;
         userProductReaction.save();
         console.log('user reactions - saved');
-        User.findById(user.id , function(err, user) {
+        User.findById(user._id , function(err, user) {
             console.log('user - saved');
             if(!user.reactions){
                 user.reactions = [];
