@@ -29,7 +29,8 @@ var userSchema = new mongoose.Schema({
   allergies: [{}],
   searches: [{}],
   reactions: [{}],
-  loginDate: Date
+  loginDate: Date,
+  dob: Date
 }, schemaOptions);
 
 userSchema.pre('save', function(next) {
