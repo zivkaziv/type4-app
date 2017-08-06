@@ -46,7 +46,7 @@ exports.scrape = function(barcodeId){
                             product.image_url = selectedProduct.image_url;
                             product.ingredients = selectedProduct.ingredients;
                             product.product_url = selectedProduct.product_url;
-                            product.scraper_strategy = selectedProduct + scraper_strategy + '&&&&' + 'upc-item-db';
+                            product.scraper_strategy = selectedProduct + selectedProduct.scraper_strategy + '&&&&' + 'upc-item-db';
                             product.scraped_time = new Date();
                             product.scrape_result = 'FOUND';
                             resolve(products);
