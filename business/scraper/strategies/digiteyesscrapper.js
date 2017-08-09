@@ -21,7 +21,11 @@ exports.scrape = function(barcodeId){
         }catch (err){
             console.log(err);
         }
-        request(url, (err, response,body) => {
+        request.get(url,{timeout: 4000} ,(err, response,body) => {
+            if(err){
+                console.log('error on digit eye' + JSON.stringify(err));
+                reject(err);
+            }
             //check if this item exist in DB
             console.log(JSON.parse(body));
             var productFromServer = JSON.parse(body);
