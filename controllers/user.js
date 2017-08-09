@@ -107,7 +107,8 @@ exports.signupPost = function(req, res, next) {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
-      dob: req.body.dob
+      dob: req.body.dob,
+      gender: req.body.gender
     });
     user.save(function(err) {
     res.send({ token: generateToken(user), user: user });
