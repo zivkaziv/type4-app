@@ -441,18 +441,18 @@ function saveUserSearch(user,product,location){
 }
 
 function updateUserSearches(user,product){
-    User.findOne({email:user.email}, (err, user) => {
-        if(user) {
-            for (let searchIndex = 0; searchIndex <user.searches.size; searchIndex++){
-                if(user.searches[searchIndex].barcode_id === product.barcode_id){
-                    user.searches[searchIndex].reported_users.push({email:user.email});
-                }
-            }
-            user.save();
-        }else{
-            console.log('No User');
+    for (let searchIndex = 0; searchIndex <user.searches.size; searchIndex++){
+        if(user.searches[searchIndex].barcode_id === product.barcode_id){
+            user.searches[searchIndex].reported_users.push({email:user.email});
         }
-    })
+    }
+
+    User.update({ _id: user._id },{
+        searches:user.searches
+    },function(err, affected, resp) {
+        console.log(resp);
+    });
+
 }
 
 function saveUserProductReaction(user,product,location){
