@@ -441,15 +441,16 @@ function saveUserSearch(user,product,location){
 }
 
 function updateUserSearches(user,product){
-    User.findById(user._id, (err, user) => {
+    User.findOne({email:user.email}, (err, user) => {
         if(user) {
             for (let searchIndex = 0; searchIndex <user.searches.size; searchIndex++){
-                if(user.searches[searchIndex]._id === product._id){
+                if(user.searches[searchIndex].barcode_id === product.barcode_id){
                     user.searches[searchIndex].reported_users.push({email:user.email});
-                    break;
                 }
             }
             user.save();
+        }else{
+            console.log('No User');
         }
     })
 }
