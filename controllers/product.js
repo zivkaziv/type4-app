@@ -1,5 +1,7 @@
 var ProductProvider = require('../business/logic/productprovider');
 var jwt = require('jsonwebtoken');
+var natural = require('natural');
+
 var User = require('../models/User');
 var Product = require('../models/Product');
 var ScrapedProduct = require('../models/Scrapedprodcut');
@@ -371,7 +373,7 @@ function markProblematicIngredients(user,product){
             for (let ingredientIndex = 0; ingredientIndex < product.ingredients.length; ingredientIndex++) {
                 let isSensetive = false;
                 for (let allergyIndex = 0; allergyIndex < user.allergies.length; allergyIndex++) {
-                    if (user.allergies[allergyIndex].originalObject.compound.toLowerCase().indexOf(product.ingredients[ingredientIndex].toLowerCase()) > -1) {
+                    if (isCompoundMatch(user.allergies[allergyIndex].originalObject.compound,product.ingredients[ingredientIndex])) {
                         product.ingredient_analysis.push({
                             name: product.ingredients[ingredientIndex],
                             analysis: 'SENSITIVE'
@@ -379,6 +381,20 @@ function markProblematicIngredients(user,product){
                         isSensetive = true;
                         product.is_safe = false;
                         break;
+                    }
+                    //in case this allergy have other synonyms
+                    if(user.allergies[allergyIndex].originalObject.compound_synonyms && user.allergies[allergyIndex].originalObject.compound_synonyms.length > 0){
+                        for(let synonymIndex = 0; synonymIndex < user.allergies[allergyIndex].originalObject.compound_synonyms.length; synonymIndex++){
+                            if (isCompoundMatch(user.allergies[allergyIndex].originalObject.compound_synonyms[synonymIndex],product.ingredients[ingredientIndex])) {
+                                product.ingredient_analysis.push({
+                                    name: product.ingredients[ingredientIndex],
+                                    analysis: 'SENSITIVE'
+                                });
+                                isSensetive = true;
+                                product.is_safe = false;
+                                break;
+                            }
+                        }
                     }
                 }
                 if(!isSensetive) {
@@ -393,6 +409,14 @@ function markProblematicIngredients(user,product){
 
         product._doc.ingredient_analysis = product.ingredient_analysis;
     }
+}
+
+function isCompoundMatch(compound,ingredient){
+    //original match.. simple one
+    // return compound.toLowerCase().indexOf(ingredient.toLowerCase()) > -1;
+    var matchResult = natural.JaroWinklerDistance(compound,ingredient);
+    console.log('match result of '+ compound + ' and ' + ingredient + ' is ' + matchResult);
+    return matchResult > 0.95;
 }
 
 function saveUserSearch(user,product,location){
