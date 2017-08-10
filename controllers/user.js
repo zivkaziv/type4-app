@@ -6,6 +6,7 @@ var moment = require('moment');
 var request = require('request');
 var qs = require('querystring');
 var User = require('../models/User');
+var Allergy = require('../models/Allergy');
 
 function generateToken(user) {
   var payload = {
@@ -53,6 +54,7 @@ exports.loginPost = function(req, res, next) {
         if (!isMatch) {
           return res.status(401).send({ msg: 'Invalid email or password' });
         }
+        updateUserAllergies(user);
         user.loginDate = new Date();
         user.save();
         res.send({ token: generateToken(user), user: user.toJSON() });
@@ -76,6 +78,7 @@ exports.tokenLoginPost = function(req, res, next) {
       if (!user) {
           return res.status(401).send('Unable to find user according to token')
       }else{
+          updateUserAllergies(user);
           user.loginDate = new Date();
           user.save();
           res.send({ token: generateToken(user), user: user.toJSON() });
@@ -355,3 +358,25 @@ exports.fixUserFieldsPost = function(req,res){
     }
   })
 };
+
+function updateUserAllergies(user){
+    Allergy.find({}, function(err, allergies) {
+        if(err) return;
+        if(allergies) {
+            for (let userAllergyIndex = 0; userAllergyIndex <user.allergies.length; userAllergyIndex++){
+                for(let allergyIndex = 0; allergyIndex <allergies.length; allergyIndex++){
+                    if(user.allergies[userAllergyIndex].title === allergies[allergyIndex].compound){
+                        user.allergies[userAllergyIndex].description = allergies[allergyIndex].toObject({getters: false});
+                        user.allergies[userAllergyIndex].originalObject = allergies[allergyIndex].toObject({getters: false});
+                        break;
+                    }
+                }
+            }
+        }
+        User.update({_id: user._id}, {
+            allergies: user.allergies
+        }, function(err, affected, resp) {
+            console.log(resp);
+        })
+    });
+}
