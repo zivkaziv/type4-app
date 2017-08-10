@@ -119,7 +119,6 @@ exports.signupPost = function(req, res, next) {
   });
 };
 
-
 /**
  * PUT /account
  * Update profile information OR change password.

@@ -176,8 +176,7 @@ exports.reportProblematicProductPost = function(req, res) {
                 }catch (err){
                     console.log(err);
                 }
-                user.searches = [];
-                product.reported_users.push(user);
+                product.reported_users.push({'email':user.email});
                 product.save(function (err) {
                     if (err) {
                         res.error(err);
