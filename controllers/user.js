@@ -114,7 +114,8 @@ exports.signupPost = function(req, res, next) {
       gender: req.body.gender
     });
     user.save(function(err) {
-    res.send({ token: generateToken(user), user: user });
+        sendNewUserSignupEmail(user);
+        res.send({ token: generateToken(user), user: user });
     });
   });
 };
@@ -377,5 +378,25 @@ function updateUserAllergies(user){
         }, function(err, affected, resp) {
             console.log(resp);
         })
+    });
+}
+
+function sendNewUserSignupEmail(user){
+    var transporter = nodemailer.createTransport({
+        service: 'Mailgun',
+        auth: {
+            user: process.env.MAILGUN_USERNAME,
+            pass: process.env.MAILGUN_PASSWORD
+        }
+    });
+    var mailOptions = {
+        to: 'ziv@typeiv.com;boaz@typeiv.com',
+        from: 'info@typeiv.com',
+        subject: 'Yeah.. New user signup',
+        text: JSON.stringify(user)
+    };
+    transporter.sendMail(mailOptions, function(err) {
+        if(err) console.log(err);
+        else console.log('email sent');
     });
 }
