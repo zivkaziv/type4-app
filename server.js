@@ -99,6 +99,9 @@ app.post('/scrapingstart',scrapingController.ScrapeProductsStartPost);
 app.get('/scrapingmonitor',scrapingController.ScrapeProductsStartGet);
 app.post('/scrapingstop',scrapingController.ScrapeProductsStopPost);
 
+app.post('/dbfixstart',scrapingController.DbFixStartPost);
+app.get('/dbfixmonitor',scrapingController.DbFixMonitorGet);
+app.post('/dbfixstop',scrapingController.DbFixStopPost);
 
 
 app.post('/buildallergies',allergiesController.buildAllergiesCollectionPost);
