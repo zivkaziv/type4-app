@@ -30,7 +30,7 @@ exports.scrape = function(barcodeId){
                 //in case we found the amazonID - continue in Amazon
                 if(amazonId){
                     productName.amazon_id = amazonId;
-                    // AmazonScraper.extractFromAmazon(product, barcodeId, resolve, unfoundProduct, reject);
+                    AmazonScraper.extractFromAmazon(product, barcodeId, resolve, unfoundProduct, reject);
                 }else{//try to find by names
                     let names = $('ol li');
                     let optionalNames = [];
@@ -40,8 +40,8 @@ exports.scrape = function(barcodeId){
                     }
                     // ScrapedProduct.findOne({$or:[{barcode_id:product.barcode_id},{ name: {$in : optionalNames }}]}, function(err, products) {
                     ScrapedProduct.findOne({barcode_id:product.barcode_id}, function(err, products) {
-                        if(products && products.length > 0) {
-                            let selectedProduct = products[0];
+                        if(product) {
+                            let selectedProduct = product;
                             product.name = selectedProduct.name;
                             product.barcode_id = selectedProduct.barcode_id;
                             product.image_url = selectedProduct.image_url;

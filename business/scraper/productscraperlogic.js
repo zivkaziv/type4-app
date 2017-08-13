@@ -4,21 +4,27 @@
 var amazonUsScraper = require('./strategies/productscraperamazonus');
 var digitalEysScraper = require('./strategies/digiteyesscrapper');
 var upcItemDbScraper = require('./strategies/upcitemdb');
+var scrapedProductsDBScraper = require('./strategies/scrapedproductsdb');
 
 exports.scrapeProduct = function(barcodeId){
     return new Promise((resolve,reject) => {
-            upcItemDbScraper.scrape(barcodeId).then(function(product){
+        scrapedProductsDBScraper.scrape(barcodeId).then(function (product) {
             resolve(product);
-        },function(err){
+        }, function (err) {
             console.log(err);
-                amazonUsScraper.scrape(barcodeId).then(function(product){
+            upcItemDbScraper.scrape(barcodeId).then(function (product) {
                 resolve(product);
-            },function(err){
+            }, function (err) {
                 console.log(err);
-                digitalEysScraper.scrape(barcodeId).then(function(product){
+                amazonUsScraper.scrape(barcodeId).then(function (product) {
                     resolve(product);
-                },function(err){
-                    reject(err);
+                }, function (err) {
+                    console.log(err);
+                    digitalEysScraper.scrape(barcodeId).then(function (product) {
+                        resolve(product);
+                    }, function (err) {
+                        reject(err);
+                    });
                 });
             });
         });
