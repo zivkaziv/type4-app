@@ -52,7 +52,7 @@ exports.scrape = function(barcodeId){
                             product.scrape_result = 'FOUND';
                             resolve(products);
                         }else{
-                            unfoundProduct.barcode_id = product.barcode_id;
+                            unfoundProduct.barcode_id = barcodeId;
                             unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_SCRAPED_ITEMS_DB';
                             unfoundProduct.error = optionalNames.toString();
                             unfoundProduct.name = productName;
