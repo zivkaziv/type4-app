@@ -19,7 +19,7 @@ exports.scrape = function(barcodeId){
         product.barcode_id = barcodeId;
         ScrapedProduct.findOne({barcode_id:product.barcode_id}, function(err, product) {
             if(product) {
-                let selectedProduct = products[0];
+                let selectedProduct = product;
                 product.name = selectedProduct.name;
                 product.barcode_id = selectedProduct.barcode_id;
                 product.image_url = selectedProduct.image_url;
@@ -28,7 +28,7 @@ exports.scrape = function(barcodeId){
                 product.scraper_strategy = selectedProduct + selectedProduct.scraper_strategy + '&&&&' + 'upc-item-db';
                 product.scraped_time = new Date();
                 product.scrape_result = 'FOUND';
-                resolve(products);
+                resolve(product);
             }else{
                 unfoundProduct.barcode_id = barcodeId;
                 unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_SCRAPED_ITEMS_DB';
