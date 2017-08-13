@@ -38,7 +38,8 @@ exports.scrape = function(barcodeId){
                         let name = $(names[nameIndex]).text().trim();
                         optionalNames.push(name);
                     }
-                    ScrapedProduct.findOne({$or:[{barcode_id:product.barcode_id},{ name: {$in : optionalNames }}]}, function(err, products) {
+                    // ScrapedProduct.findOne({$or:[{barcode_id:product.barcode_id},{ name: {$in : optionalNames }}]}, function(err, products) {
+                    ScrapedProduct.findOne({barcode_id:product.barcode_id}, function(err, products) {
                         if(products && products.length > 0) {
                             let selectedProduct = products[0];
                             product.name = selectedProduct.name;
