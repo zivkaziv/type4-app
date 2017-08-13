@@ -373,10 +373,10 @@ function updateUserAllergies(user){
                 }
             }
         }
-        User.update({_id: user._id}, {
+        User.update({_id: user.id}, {
             allergies: user.allergies
         }, function(err, affected, resp) {
-            console.log(resp);
+            // console.log(resp);
         })
     });
 }
