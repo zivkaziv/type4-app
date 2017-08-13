@@ -7,11 +7,11 @@ var upcItemDbScraper = require('./strategies/upcitemdb');
 
 exports.scrapeProduct = function(barcodeId){
     return new Promise((resolve,reject) => {
-        amazonUsScraper.scrape(barcodeId).then(function(product){
+            upcItemDbScraper.scrape(barcodeId).then(function(product){
             resolve(product);
         },function(err){
             console.log(err);
-            upcItemDbScraper.scrape(barcodeId).then(function(product){
+                amazonUsScraper.scrape(barcodeId).then(function(product){
                 resolve(product);
             },function(err){
                 console.log(err);
