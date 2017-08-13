@@ -10,9 +10,9 @@ exports.CommonFixer = class CommonFixer {
     fixProductsInScrapedProductsDB(){
         return setInterval(function() {
                 // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
-                ScrapedProduct.findOne({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"}).exec(function (err, productToFix) {
+                ScrapedProduct.findOne({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"},function(err,productToFix) {
                     try {
-                        if (productToFix && productToFix.barcode_id) {
+                        if (productToFix && productToFix.barcode_id && productToFix.barcode_id.length < 13) {
                             productToFix.barcode_id = fixBarcode(productToFix);
                             ScrapedProduct.update({_id: productToFix.id}, {
                                 barcode_id: productToFix.barcode_id
