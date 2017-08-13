@@ -11,14 +11,14 @@ var allergiesBuilder = {
     allergies : [],
     buildFromCSV : function(jsonObj){
         var allergyObj = new Allergy();
-        allergyObj.compound = jsonObj['compound'];
-        allergyObj.db_name = jsonObj['db'];
+        allergyObj.compound = jsonObj['Compound'];
+        allergyObj.db_name = jsonObj['db_name'];
         allergyObj.db_updated_date = new Date(jsonObj['updated_to']);
-        allergyObj.concentration = jsonObj['concentration'];
-        allergyObj.measue = jsonObj['measure'];
+        allergyObj.concentration = jsonObj['Conc'];
+        allergyObj.measure = jsonObj['Measure'];
         allergyObj.art_number = jsonObj['Art#'];
-        for(let index = 0; index < 20; index++){
-            var compoundSyn = jsonObj['name' + index];
+        for(let index = 0; index < 80; index++){
+            var compoundSyn = jsonObj['field' + index];
             if(compoundSyn) {
                 allergyObj.compound_synonyms.push(compoundSyn);
             }
