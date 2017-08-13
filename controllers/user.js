@@ -365,7 +365,7 @@ function updateUserAllergies(user){
         if(allergies) {
             for (let userAllergyIndex = 0; userAllergyIndex <user.allergies.length; userAllergyIndex++){
                 for(let allergyIndex = 0; allergyIndex <allergies.length; allergyIndex++){
-                    if(user.allergies[userAllergyIndex].title === allergies[allergyIndex].compound){
+                    if(user.allergies[userAllergyIndex].title.toLowerCase().indexOf(allergies[allergyIndex].compound.toLowerCase()) > -1){
                         user.allergies[userAllergyIndex].description = allergies[allergyIndex].toObject({getters: false});
                         user.allergies[userAllergyIndex].originalObject = allergies[allergyIndex].toObject({getters: false});
                         break;
