@@ -30,7 +30,7 @@ exports.scrape = function(barcodeId){
                 //in case we found the amazonID - continue in Amazon
                 if(amazonId){
                     productName.amazon_id = amazonId;
-                    AmazonScraper.extractFromAmazon(product, barcodeId, resolve, unfoundProduct, reject);
+                    // AmazonScraper.extractFromAmazon(product, barcodeId, resolve, unfoundProduct, reject);
                 }else{//try to find by names
                     let names = $('ol li');
                     let optionalNames = [];
