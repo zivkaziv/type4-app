@@ -9,11 +9,8 @@ exports.CommonFixer = class CommonFixer {
 
     fixProductsInScrapedProductsDB(){
         return setInterval(function() {
-            ScrapedProduct.count({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"}).exec(function(err, count) {
-                // ScrapedProduct.findOne({$and:[{"scrape_result" : { $exists : false }}, { "ingredients":  {$size: 0}}]}, function(err, productToScrape) {
-                let random = Math.floor(Math.random() * count);
                 // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
-                ScrapedProduct.findOne({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"}).skip(random).exec(function (err, productToFix) {
+                ScrapedProduct.findOne({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"}).exec(function (err, productToFix) {
                     try {
                         if (productToFix) {
                             productToFix.barcode_id = fixBarcode(productToFix);
@@ -29,8 +26,7 @@ exports.CommonFixer = class CommonFixer {
                         console.log('Error ' + err);
                     }
                 });
-            });
-        }, 1000);
+        }, 2000);
     }
 };
 
