@@ -12,7 +12,7 @@ exports.CommonFixer = class CommonFixer {
                 // ScrapedProduct.findOne({'product_url' : {$regex : ".*657622412782*"}}).skip(0).exec(function (err, productToScrape) {
                 ScrapedProduct.findOne({ barcode_id: { $exists: true } , $where: "this.barcode_id.length < 13"}).exec(function (err, productToFix) {
                     try {
-                        if (productToFix) {
+                        if (productToFix && productToFix.barcode_id) {
                             productToFix.barcode_id = fixBarcode(productToFix);
                             ScrapedProduct.update({_id: productToFix.id}, {
                                 barcode_id: productToFix.barcode_id
