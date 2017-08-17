@@ -419,7 +419,7 @@ function isCompoundMatch(compound,ingredient){
 }
 
 function saveUserSearch(user,product,location){
-    user.searches.push(product);
+    user.searches.unshift(product);
     try {
         user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
     }catch (err){
