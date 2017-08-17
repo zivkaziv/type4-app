@@ -381,6 +381,38 @@ function updateUserAllergies(user){
     });
 }
 
+function setToUserAllAllergies(user){
+    Allergy.find({}, function(err, allergies) {
+        if(err) return;
+        if(allergies) {
+            // for (let userAllergyIndex = 0; userAllergyIndex <user.allergies.length; userAllergyIndex++){
+            //     for(let allergyIndex = 0; allergyIndex <allergies.length; allergyIndex++){
+            //         if(user.allergies[userAllergyIndex].title.toLowerCase().indexOf(allergies[allergyIndex].compound.toLowerCase()) > -1){
+            //             user.allergies[userAllergyIndex].description = allergies[allergyIndex].toObject({getters: false});
+            //             user.allergies[userAllergyIndex].originalObject = allergies[allergyIndex].toObject({getters: false});
+            //             break;
+            //         }
+            //     }
+            // }
+            user.allergies = [];
+
+            for(let allergyIndex = 0; allergyIndex <allergies.length; allergyIndex++){
+                user.allergies.push({
+                    title : allergies[allergyIndex].compound,
+                    description : allergies[allergyIndex].toObject({getters: false}),
+                    originalObject : allergies[allergyIndex].toObject({getters: false}),
+                    image: ''
+                })
+            }
+        }
+        User.update({_id: user.id}, {
+            allergies: user.allergies
+        }, function(err, affected, resp) {
+            // console.log(resp);
+        })
+    });
+}
+
 function sendNewUserSignupEmail(user){
     var transporter = nodemailer.createTransport({
         service: 'Mailgun',
