@@ -504,10 +504,10 @@ function validateNewProduct(product){
 }
 
 function isExistInUserHistory(user,product){
-    user.searches.foreach((productSearch) =>{
-        if(productSearch.barcode_id === product.barcode_id){
+    for (let searchIndex = 0; searchIndex <user.searches.size; searchIndex++){
+        if(user.searches[searchIndex].barcode_id === product.barcode_id){
             return true;
         }
-    });
+    }
     return false;
 }
