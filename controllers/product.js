@@ -419,25 +419,35 @@ function isCompoundMatch(compound,ingredient){
 }
 
 function saveUserSearch(user,product,location){
-    user.searches.unshift(product);
-    try {
-        user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
-    }catch (err){
-        console.log(err)
+    if(!isExistInUserHistory(user,product)){
+        user.searches.push(product);
+        try {
+            user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
+        }catch (err){
+            console.log(err)
+        }
+
+        try {
+            let userProductSearch = new UserProductSearch();
+            userProductSearch.user = user;
+            userProductSearch.product = product;
+            userProductSearch.location = location;
+            userProductSearch.analysis = product.ingredient_analysis;
+            userProductSearch.save();
+        }catch (err){
+            console.log(err);
+        }
+    //This is reload
+    }else{
+        user.searches.unshift(product);
+        try {
+            user.searches = user.searches.filter((thing, index, self) => self.findIndex(t => t.barcode_id === thing.barcode_id) === index);
+        }catch (err){
+            console.log(err)
+        }
     }
 
     user.save();
-
-    try {
-        let userProductSearch = new UserProductSearch();
-        userProductSearch.user = user;
-        userProductSearch.product = product;
-        userProductSearch.location = location;
-        userProductSearch.analysis = product.ingredient_analysis;
-        userProductSearch.save();
-    }catch (err){
-        console.log(err);
-    }
 }
 
 function updateUserSearches(user,product){
@@ -491,4 +501,13 @@ function validateNewProduct(product){
     }
 
     return 'OK'
+}
+
+function isExistInUserHistory(user,product){
+    user.searches.foreach((productSearch) =>{
+        if(productSearch.barcode_id === product.barcode_id){
+            return true;
+        }
+    });
+    return false;
 }
