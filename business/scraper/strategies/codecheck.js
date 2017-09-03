@@ -20,7 +20,7 @@ exports.scrape = function(barcodeId){
         cheerioReq(url, (err, $) => {
             try {
                 product.name = $('.float-group h1').text().trim();
-                product.image_url = $('.cc-image img').attr('src') ? 'https://www.codecheck.info/img' + $('.cc-image img').attr('src').trim() : 'http://typeiv.herokuapp.com/images/no_image.png';
+                product.image_url = $('.cc-image img').attr('src') ? 'https://www.codecheck.info' + $('.cc-image img').attr('src').trim() : 'http://typeiv.herokuapp.com/images/no_image.png';
                 product.scrape_result = 'FOUND';
                 product.scraper_strategy = 'codecheck.info';
                 product.scraped_time = new Date();
