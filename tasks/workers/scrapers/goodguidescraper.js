@@ -10,7 +10,9 @@ const PRODUCTS_URL = 'https://www.goodguide.com/products/directory/{letter}?page
 const letters = ['0-9'];//for debug
 const PRODUCT_BASE_URL = 'https://www.goodguide.com';
 const SCRAPER_STRATEGY = 'goodguide.com';
-
+const MAIN_CATEGORIES_CODE=['152786','255918','176856','152775'];
+const MAIN_CATEGORIES_CODE_TEST=['152786'];
+const categories = new Map();
 
 exports.GoodGuideScraper = class GoodGuideScraper {
     constructor() {
@@ -114,4 +116,34 @@ exports.GoodGuideScraper = class GoodGuideScraper {
             }
         }
     }
+
+    printCategories(){
+        MAIN_CATEGORIES_CODE_TEST.forEach((categoryCode) => {
+            categories.set(categoryCode,new Map());
+            this.handleCategoryId(categoryCode);
+        })
+    }
+
+    handleCategoryId(id){
+        var url = 'https://www.goodguide.com/catalog/categories/{c_id}.json'.replace('{c_id}',id);
+        const options = {
+            url: url,
+            method: 'GET',
+            headers: {
+                'Accept-Charset': 'utf-8',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0' // optional headers
+            }
+        };
+
+        console.log('URL: ' + url);
+        request(options,(err, response) => {
+            var repsonseObject = JSON.parse(response.body);
+            repsonseObject.categories.forEach((category)=>{
+                console.log(category);
+           })
+        });
+    }
 };
+
+// var scraper = new this.GoodGuideScraper();
+// scraper.printCategories();
