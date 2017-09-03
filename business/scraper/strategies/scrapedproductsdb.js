@@ -28,7 +28,11 @@ exports.scrape = function(barcodeId){
                 product.scraper_strategy = selectedProduct + selectedProduct.scraper_strategy + '&&&&' + 'upc-item-db';
                 product.scraped_time = new Date();
                 product.scrape_result = 'FOUND';
-                resolve(product);
+                if(product.ingredients.length > 0) {
+                    resolve(product);
+                }else{
+                    reject(unfoundProduct);
+                }
             }else{
                 unfoundProduct.barcode_id = barcodeId;
                 unfoundProduct.scrape_result = 'NOT_FOUND_PRODUCT_IN_SCRAPED_ITEMS_DB';
