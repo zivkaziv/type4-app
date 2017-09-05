@@ -454,7 +454,7 @@ function sendWelcomeEmail(user){
     var mailOptions = {
         to: user.email,
         bcc:'ziv@typeiv.com;boaz@typeiv.com',
-        from: 'mark@typeiv.com',
+        from: 'Mark@TypeIV.com',
         subject: 'Welcome to TypeIV!',
         text: `
 Hi ${nameForTheEmail},
