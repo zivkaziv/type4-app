@@ -115,6 +115,7 @@ exports.signupPost = function(req, res, next) {
     });
     user.save(function(err) {
         sendNewUserSignupEmail(user);
+        sendWelcomeEmail(user);
         res.send({ token: generateToken(user), user: user });
     });
   });
@@ -426,6 +427,53 @@ function sendNewUserSignupEmail(user){
         from: 'info@typeiv.com',
         subject: 'Yeah.. New user signup',
         text: JSON.stringify(user)
+    };
+    transporter.sendMail(mailOptions, function(err) {
+        if(err) console.log(err);
+        else console.log('email sent');
+    });
+}
+
+function sendWelcomeEmail(user){
+    var transporter = nodemailer.createTransport({
+        service: 'Mailgun',
+        auth: {
+            user: process.env.MAILGUN_USERNAME,
+            pass: process.env.MAILGUN_PASSWORD
+        }
+    });
+    let nameForTheEmail = user.name;
+    try {
+        nameForTheEmail = user.name.split(' ')[0];
+        if(!nameForTheEmail || nameForTheEmail===''){
+            nameForTheEmail = user.name
+        }
+    }catch (err){
+        nameForTheEmail = user.name;
+    }
+    var mailOptions = {
+        to: user.email,
+        bcc:'ziv@typeiv.com;boaz@typeiv.com',
+        from: 'mark@typeiv.com',
+        subject: 'Welcome to TypeIV!',
+        text: `
+Hi ${nameForTheEmail},
+
+Welcome to TypeIV!
+
+Skin allergy is what we do, and it's very important to us to keep you safe.
+
+To begin using the app, update your allergen list as received from your doctor, then scan products which you're interested in, and we'd tell you whether they are safe for you or not. 
+
+Our database is one of the biggest available for products and ingredients, and it keeps growing every day.
+
+Feel free to contact me, we'd love your feedback and shaping the product better for our users.
+
+Regards,
+
+Mark Roberts
+Head of Customer Experience
+http://www.typeiv.com/`
     };
     transporter.sendMail(mailOptions, function(err) {
         if(err) console.log(err);
