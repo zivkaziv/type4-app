@@ -1,5 +1,5 @@
 //publish android
-ionic build android --release
+sudo ionic build android --release
 
 cd platforms/android/build/outputs/apk/
 
