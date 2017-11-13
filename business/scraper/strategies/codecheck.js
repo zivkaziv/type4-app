@@ -14,6 +14,7 @@ exports.scrape = function(barcodeId){
     return new Promise((resolve,reject) => {
         let product = new Product();
         let unfoundProduct = new UnfoundProduct();
+        product.amazon_id = barcodeId;
         product.barcode_id = barcodeId;
         let url = CODECHECK_URL.replace('{upc}',barcodeId);
         console.log(url);
